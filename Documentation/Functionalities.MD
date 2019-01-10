@@ -7,4 +7,7 @@
     - Forum/Site to Organize the games.
     - Game.
     - Private Zone to Create and Manage posts and rules.
-    - 
+    - Language Options
+    - Chat in Game.
+    - Upload User's Photos
+    - Interactive Map?
