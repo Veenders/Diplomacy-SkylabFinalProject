@@ -1,0 +1,99 @@
+partides = {
+    "id": int, //Database id.
+    "name": string, //Description Text for humans
+    "open": boolean, //Appear on Public List or no.
+    "coperative": boolean, //Can players support other players -> Not necessary implementation
+    "house_assing": boolean, //Automatic or Manual House Assign
+    "turn_duration": time, //Automatic jump to next turn -> Not necessary implementation
+    "game_kind": boolean, // Control of SC or Missions -> Not necessary implementation
+    "invite_code": string, //Necesary code to Join the game.
+    "user_id": int, //Database Owner's id.
+    "started": boolean, //If game is started or no.
+    "created_at": tiemstamp, //Optional. To know when is created a game.
+    "updated_at": timestamp, //Optionl. To know when a game is udpated.
+    "players": [{
+        // 6 player. Future: Develop 4 and 5 players Game.
+        "user_id": int, //Database Player's id.
+        "house_id": int //Database House's id.
+      }],
+    "turns": [{
+        //Maximum 10 turns.
+        "id": int, //Database turn's id
+        "partida_id": int, //If necessary, implemented in present Database
+        "number": int, //Number of the turn 1-10 value.
+        "phase": int, //Phase of the turn playing in this moment \11 phases\
+        "present_player": int, //Database id of the present player \Not necessary set in some phases\
+        "westeros_deck1": [int], //Array of Database id's Westeros Card of deck 1 to know the order of the cards.
+        "westeros_deck2": [int], //Array of Database id's Westeros Card of deck 2 to know the order of the cards.
+        "westeros_deck3": [int], //Array of Database id's Westeros Card of deck 3 to know the order of the cards.
+        "player": [{
+            //6 player's turn, one for Each player.
+            "id": int, //Database player_turn's id
+            "user_id": int, //Database Player's id.
+            "house_id": int, //Database House's id. Easy access to tokens and elements.
+            "supply": int, //How many supply Points have the player.
+            "victory": int, //How many victory Point have the player. (At 10 player won and game is finished).
+            "oThrone": int, //Position in Throne Order.
+            "oSword": int, //Position in Sword Order.
+            "oCrow": int, //Position in Crow Order.
+            "power_tokens": int, //Number of Power Tokens in this moment.
+            "westeros": int, //Information about Westeros Phase.
+            "bThrone": int, //Bet to Throne Order
+            "bSword": int, //Bet to Sword Order
+            "bCrow": int, //Bet to Crow Order
+            "bWild": int, //Bet to Stop Wild Attack
+            "oVictory": int, //When Finish the Game Order of Victory.
+            "orders": [{ // 1 Order for every Map territory with armies.
+                "id": int, //Database order_turn_map's id
+                "turn_id": int, //Turn id to easy link.
+                "turnuser_id": int, //Database player's turn id
+                "territory_id": int, //Database map's id.
+                "order_id": int, //Database order's id.
+                "deleted_at": date //Soft Delete to know when used.
+              }],
+            "armies": [{ // Control every army on the map.
+                "id": int, //Database army_turn_map's id;
+                "turn_id": int, //Turn id to easy link.
+                "turnuser_id": int, //Database player's turn id
+                "territory_id": int, //Database map's id.
+                "army_id": int, //Database army's id.
+                "deleted_at": date //Soft Delete to know when used.
+              }],
+            "power_tokens":[{
+                "id": int, //Database element's id
+                "turn_id": int, //Database tunr's id
+                "turnuser_id": int, //Database turn_user's id
+                "map_id": int, //Database map's id.
+            }],
+            "combat": [{ // When combat occurs
+                "id": int, //Database combat id;
+                "map_id": int, //Database map's id where the combat occurrs.
+                "attack_id": int, //Database user's id who attack the territory.
+                "attack_strenght": int, //Sum of Strenght of all elements attacking.
+                "attack_card": int, //Database's id of the card used on attack,
+                "attack_suport": int, //If Game allows colaboration Strenght of other players suporting attack.
+                "attack_retreat": int, //Database map's id where attack begins.
+                "attack_special": text, //Special Function used in this attack --> not implemented,
+                "defender_id": int, //Database user's id who defends the territory.
+                "defender_strenght": int, //Sum of Strength of all elements defending.
+                "defender_card": int, //Database's id of the card used to defend.
+                "defender_suport": int, //If Game allows colaboration Strenght of other players suporting defending.
+                "defender_retreat": int, //Database map's id where defender retreat if Lose Combat.
+                "defender_special": text, //Special Function used in this defence --> not implemented,
+                "finished": boolean, //If combat is finished or no.
+                "powertoken": boolean, //If attacker put a Power Token on his origin territory.
+                "sword": boolean, //If one of the player's is the oSword 1 and use the sword.
+              }],
+            "housecard":[{ //Control of Housecard state
+                "id": int, //Database state's id;
+                "turn_player_id": int, // Database Turn_palyer's id
+                "housecard_id": int, //Database card's id;
+                "used": boolean, //Disponibility of the card.
+            }]
+          }],
+        "westeros_cards":[{
+            "westeroscard_id": int, //Database westeros card's id
+            "finished": boolean, //Finished or not.
+        }]
+      }]
+  }
