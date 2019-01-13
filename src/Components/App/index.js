@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 //import video from '../../Img/MainVideo.mp4';
 
-import Veenders from '../Veenders';
+import Main from '../../Views/Main';
 import Header from '../Header';
 import './styles.scss';
+import Component404 from '../../Views/Component404';
 
 class App extends Component {
   render() {
@@ -15,8 +16,8 @@ class App extends Component {
             </div>
               <Header />
               <Switch>
-                  <Route exact path="/" component={()=><Veenders />} />
-                  <Route component={()=><Veenders  />} />
+                  <Route exact path="/" component={()=><Main />} />
+                  <Route component={()=><Component404 />} />
               </Switch>
             
           </div>
