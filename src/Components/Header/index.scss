@@ -1,10 +1,267 @@
+@import '../../variables';
+
 .App-header {
-    background-color: rgba(#282c34,0.6);
     min-height: 10vh;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     font-size: calc(10px + 2vmin);
-    color: white;
+    color: $primaryColor;
   }
+
+  .Background {
+    background-image: url('../../img/Main_Background.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.3;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    position: absolute;
+    z-index:-1;
+    padding-right: 0;
+    filter: blur(0px);
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+    &.toggled {
+      filter: blur(8px);
+      z-index: 10;
+    }
+    @media (min-width: 800px){
+      &.toggled {
+        right: 250px;
+      }
+    }
+  }
+
+/*-------------------------------*/
+/*     Sidebar nav styles        */
+/*-------------------------------*/
+.sideBar{
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 250px;
+  margin: 0;
+  padding: 0;
+  opacity: 0;
+  background-color:$primaryColor;
+  -webkit-transition: all 0.5s ease;
+  -moz-transition: all 0.5s ease;
+  -o-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+  color: $contrastColor;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+  align-items: stretch;
+  ul{
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+    align-items: stretch;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    li{
+      text-align: left;
+      padding: 0.8em 1.5em;
+      margin: 0;
+      position: relative;
+    }
+    li:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: -1;
+      height: 100%;
+      width: 3px;
+      -webkit-transition: width .2s ease-in;
+        -moz-transition:  width .2s ease-in;
+         -ms-transition:  width .2s ease-in;
+              transition: width .2s ease-in;
+  
+    }
+    li:hover:before {
+      width: 100%;
+      -webkit-transition: width .2s ease-in;
+        -moz-transition:  width .2s ease-in;
+         -ms-transition:  width .2s ease-in;
+              transition: width .2s ease-in;
+  
+    }
+    li.active,
+    li:before {
+      background-color: #7281A8;
+    }
+    .homeLink.active,
+    .homeLink:before{
+      background-color: #9DB2E7;
+    }
+    .gamesLink.active,
+    .gamesLink:before{
+      background-color: #415FAC;
+    }
+    .blogLink.active,
+    .blogLink:before{
+      background-color: #586381; 
+    }
+    .rulesLink.active,
+    .rulesLink:before{
+      background-color: #3E465B; 
+    }
+    .forumLink.active,
+    .forumLink:before{
+      background-color: #5780E7; 
+    }
+    .profileLink.active,
+    .profileLink:before{
+      background-color: #465068;
+    }
+    .sidebarBrand{
+      padding: 1.2em 1.5em;
+      font-size: 1.5em;
+    }
+    .sidebarBrand:before{
+      background-color: $primaryColor;
+    }
+    .login{
+      margin-top: auto;
+    }
+  }
+  a{
+    color: $contrastColor;
+    text-decoration: none;
+  }
+
+  &.active{
+    opacity: 1;
+  }
+}
+
+/*-------------------------------*/
+/*       Hamburger-Cross         */
+/*-------------------------------*/
+
+.hamburger {
+  position: fixed;
+  top: 20px;  
+  right: 15px;
+  z-index: 999;
+  display: block;
+  width: 32px;
+  height: 32px;
+  background: transparent;
+  border: none;
+  transition: all .35s ease-in-out;
+}
+
+.hamburger.is-open{
+  right: 265px;
+}
+.hamburger:hover,
+.hamburger:focus,
+.hamburger:active {
+  outline: none;
+}
+.hamburger.is-closed:before {
+  content: '';
+  display: block;
+  width: 100px;
+  font-size: 14px;
+  color: #fff;
+  line-height: 32px;
+  text-align: center;
+  opacity: 0;
+}
+
+.hamburger.is-closed:hover:before {
+  opacity: 1;
+  display: block;
+  transform: translate3d(-100px,0,0);
+  transition: all .35s ease-in-out;
+}
+
+.hamburger.is-closed .hamb-top,
+.hamburger.is-closed .hamb-middle,
+.hamburger.is-closed .hamb-bottom,
+.hamburger.is-open .hamb-top,
+.hamburger.is-open .hamb-middle,
+.hamburger.is-open .hamb-bottom {
+  position: absolute;
+  left: 0;
+  height: 4px;
+  width: 100%;
+}
+.hamburger.is-closed .hamb-top,
+.hamburger.is-closed .hamb-middle,
+.hamburger.is-closed .hamb-bottom {
+  background-color: $primaryColor;
+}
+.hamburger.is-closed .hamb-top { 
+  top: 5px; 
+  transition: all .35s ease-in-out;
+}
+.hamburger.is-closed .hamb-middle {
+  top: 50%;
+  margin-top: -2px;
+}
+.hamburger.is-closed .hamb-bottom {
+  bottom: 5px;  
+  transition: all .35s ease-in-out;
+}
+
+.hamburger.is-closed:hover .hamb-top {
+  top: 0;
+  transition: all .35s ease-in-out;
+}
+.hamburger.is-closed:hover .hamb-bottom {
+  bottom: 0;
+  transition: all .35s ease-in-out;
+}
+.hamburger.is-open .hamb-top,
+.hamburger.is-open .hamb-middle,
+.hamburger.is-open .hamb-bottom {
+  background-color: $primaryColor;
+}
+.hamburger.is-open .hamb-top,
+.hamburger.is-open .hamb-bottom {
+  top: 50%;
+  margin-top: -2px;  
+}
+.hamburger.is-open .hamb-top { 
+  transform: rotate(45deg);
+  transition: transform .2s cubic-bezier(.73,1,.28,.08);
+}
+.hamburger.is-open .hamb-middle { display: none; }
+.hamburger.is-open .hamb-bottom {
+  transform: rotate(-45deg);
+  transition: transform .2s cubic-bezier(.73,1,.28,.08);
+}
+.hamburger.is-open:before {
+  content: '';
+  display: block;
+  width: 100px;
+  font-size: 14px;
+  color: #fff;
+  line-height: 32px;
+  text-align: center;
+  opacity: 0;
+  transform: translate3d(0,0,0);
+  transition: all .35s ease-in-out;
+}
+.hamburger.is-open:hover:before {
+  opacity: 1;
+  display: block;
+  transform: translate3d(-100px,0,0);
+  transition: all .35s ease-in-out;
+}

@@ -1,26 +1,24 @@
-import React, {Component} from 'react'
-import PropTypes from 'prop-types'
+import React, {Component} from 'react';
+import { Link } from "react-router-dom";
+
+import './index.scss';
+
+import logo from '../../img/Logo.png';
 
 class Main extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {}
-  }
-
   render() {
     return(
-      <div>
-        Hello world from Main
-      </div>
+      <main>
+        <div className="mainLogo"><img src={logo} alt="Atomic Diplomacy"/></div>
+        <h1 className="mainTitle">Atomic Diplomacy</h1>
+        <section>
+          <Link to="/games/" className="callToAction">View Games</Link>
+          <Link to="/games/" className="callToAction">Start a New Game</Link>
+        </section>
+      </main>
     )
   }
 }
-
-Main.displayName = Main
-
-Main.propTypes = {}
-
-Main.contextTypes = {}
 
 export default Main
 
