@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
 
+import logo from '../../img/Logo.png';
+
 class Games extends Component {
     render() {
         return (
             <main>
-                Main Games Page
+                <div className="Logo"><img src={logo} alt="Atomic Diplomacy"/></div>
+                <h1>Games</h1>
             </main>
         );
     }

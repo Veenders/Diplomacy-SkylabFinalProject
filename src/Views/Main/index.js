@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import { Link } from "react-router-dom";
 
 import './index.scss';
-
 import logo from '../../img/Logo.png';
 
 class Main extends Component {
@@ -13,7 +12,7 @@ class Main extends Component {
         <h1 className="mainTitle">Atomic Diplomacy</h1>
         <section>
           <Link to="/games/" className="callToAction">View Games</Link>
-          <Link to="/games/" className="callToAction">Start a New Game</Link>
+          <Link to="/games/game/" className="callToAction">Start a New Game</Link>
         </section>
       </main>
     )

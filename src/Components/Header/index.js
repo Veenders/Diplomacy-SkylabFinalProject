@@ -13,13 +13,10 @@ class Header extends Component {
                 <div className={`Background ${active? 'toggled':''}`} onClick={openMenu}>
                 </div>
                 <button type="button" className={`hamburger ${active?'is-open':'is-closed'}`} /*data-toggle="offcanvas"*/ onClick={openMenu}>
-                        <span className="hamb-top"></span>
-                        <span className="hamb-middle"></span>
-                        <span className="hamb-bottom"></span>
-                    </button>
-                {/* <header className="App-header">
-                    <div className="image"></div>
-                </header> */}
+                    <span className="hamb-top"></span>
+                    <span className="hamb-middle"></span>
+                    <span className="hamb-bottom"></span>
+                </button>
                 <nav className={`sideBar ${active? 'active':''}`}>
                     <ul>
                         <li className="sidebarBrand headtype">

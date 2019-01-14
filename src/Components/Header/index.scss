@@ -1,26 +1,16 @@
 @import '../../variables';
 
-.App-header {
-    min-height: 10vh;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    font-size: calc(10px + 2vmin);
-    color: $primaryColor;
-  }
-
   .Background {
-    background-image: url('../../img/Main_Background.jpg');
+    background-image: url('../../img/MainBackground.gif');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    opacity: 0.3;
+    opacity: 0.5;
     top: 0;
     left: 0;
     bottom: 0;
     right: 0;
-    position: absolute;
+    position: fixed;
     z-index:-1;
     padding-right: 0;
     filter: blur(0px);

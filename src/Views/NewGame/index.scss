@@ -1,0 +1,68 @@
+@import '../../variables';
+
+.Logo{
+    align-self: flex-start;
+    flex-grow: 0;
+    padding: 1em;
+}
+input{
+    border-radius: 20px;
+    padding: 0.5em;
+}
+form{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    justify-content: space-between;
+    background-color: blue;
+}
+.label{
+    padding-left: 1em;
+}
+label{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: justify;
+    font-size: 1.1em;
+    margin: 1em 0;
+    user-select: none;
+    cursor: pointer;
+    &:hover input ~ .checkBox {
+        background-color: #ccc;
+    }
+    input:checked ~ .checkBox {
+        background-color: $primaryColor;
+    }
+    input:checked ~ .checkBox:after {
+        display: block;
+    }
+}
+
+input[type=checkbox]{
+    opacity: 0;
+    cursor: pointer;
+    display: none;
+}
+
+.checkBox{
+    height: 25px;
+    width: 25px;
+    background-color: #eee;
+    border-radius: 10px;
+    &:after {
+        content: "";
+        display: none;
+    }
+    &:after {
+        margin-left: 9px;
+        margin-top: 5px;
+        width: 5px;
+        height: 10px;
+        border: solid white;
+        border-width: 0 3px 3px 0;
+        -webkit-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        transform: rotate(45deg);
+    }
+}
