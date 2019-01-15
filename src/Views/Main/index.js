@@ -10,7 +10,7 @@ class Main extends Component {
       <main>
         <div className="mainLogo"><img src={logo} alt="Atomic Diplomacy"/></div>
         <h1 className="mainTitle">Atomic Diplomacy</h1>
-        <section>
+        <section className="mainSection">
           <Link to="/games/" className="callToAction">View Games</Link>
           <Link to="/games/game/" className="callToAction">Start a New Game</Link>
         </section>
