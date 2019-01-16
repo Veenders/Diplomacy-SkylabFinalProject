@@ -12,7 +12,7 @@ class Main extends Component {
         <h1 className="mainTitle">Atomic Diplomacy</h1>
         <section className="mainSection">
           <Link to="/games/" className="callToAction">View Games</Link>
-          <Link to="/games/game/" className="callToAction">Start a New Game</Link>
+          <Link to="/newgame/" className="callToAction">Start a New Game</Link>
         </section>
       </main>
     )

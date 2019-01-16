@@ -68,6 +68,16 @@ export default class DBService{
 
         return result;
     }
+    static async getRealtimeContent(collectionName, callback){
+        DB.collection(collectionName).onSnapshot((querySnapshot) => {
+            let content = []
+            querySnapshot.forEach((doc) => {
+                const data = doc.data()
+                content.push( { id: doc.id, ...data } );
+            });
+            callback(content);
+        });
+      }
     static async getContent(collection){
         let content=[];
         try{

@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router';
+
+import DBService from '../../Services/DBService';
 
 import './index.scss';
 import logo from '../../img/Logo.png';
@@ -13,7 +16,9 @@ class NewGame extends Component {
             cooperative: false,
             houseAssign: false,
             code: '',
-            error: false,
+            players: [{id: 1, name: 'Carles', house: ''},{id: 2, name: 'Player 2', house:''}],
+            error: [false,false],
+            countries: ['austria', 'england', 'france', 'germany', 'italy', 'rusia', 'turkey']
         }
     }
     setField = (field) => {
@@ -24,11 +29,53 @@ class NewGame extends Component {
         this.setState({[event.target.name]:state});
         
     }
-    sendForm = () =>{
-        console.log('Form Sended')
+    setPlayer = (event) => {
+        let { players, countries } = this.state;
+        // eslint-disable-next-line eqeqeq
+        const [player] = players.filter(player => player.id == event.target.name);
+        player.house!=='' && countries.push(player.house);
+        const index = countries.indexOf(event.target.value);
+        index !== -1 && countries.splice(index,1);
+        player.house = event.target.value;
+        players = players.map(item =>item.id===player.id?player:item);
+        countries.sort();
+        this.setState({players,countries}); 
+    }
+    capitalize = (string) => string.charAt(0).toUpperCase() + string.slice(1)
+    playerOptions = (id) =>{
+        const { players, countries } = this.state;
+        // eslint-disable-next-line eqeqeq
+        const [player] = players.filter(player => player.id == id);
+        return (
+            <React.Fragment>
+                {player.house!=='' && <option value={player.house}>{this.capitalize(player.house)}</option>}
+                {countries.length>0 && countries.map((country,i) => <option key={country+i} value={country}>{this.capitalize(country)}</option>)}
+            </React.Fragment>
+        )
+
+    }
+    sendForm = async (event) =>{
+        event.preventDefault();
+        const {name, open, cooperative, houseAssign, code, players} = this.state;
+        let errorname = name ===''?true:false;
+        let errorplayers = false;
+        players.forEach(player=>{
+            let count = 0;
+            players.forEach(item=>player.house===item.house && player.house!==''?count++:count)
+            errorplayers=count > 1?true:errorplayers;
+        })
+        if(!errorname && !errorplayers){
+            const result = await DBService.addDocument('diplomacy',{name, open, cooperative, houseAssign, code, players});
+            if(result){
+                this.setState({name:'', open:false, cooperative:false, houseAssign:false, code:'',error:[errorname,errorplayers]},this.props.history.goBack)
+            }
+        }else{
+            this.setState({error:[errorname,errorplayers]});
+        }
+      
     }
     render() {
-        const {name , open, cooperative, houseAssign, code, error} = this.state; 
+        const {name , open, cooperative, houseAssign, code, error, players} = this.state;
         return (
             <main>
                 <div className="Logo"><img src={logo} alt="Atomic Diplomacy"/></div>
@@ -37,14 +84,14 @@ class NewGame extends Component {
                     <label htmlFor="name">
                         <div className="label">Game Name:</div>
                         <input type="text" name="name" value={name} placeholder="Put the name of the Game" onChange={(event)=>this.setField(event.target)}/>
-                        {error&&<span className="error">You need a Game Name</span>}
                     </label>
+                    {error[0]&&<div className="error">You need a Game Name</div>}
                     <label htmlFor="open">
                         <div className="label">Open:</div> <input type="checkbox" name="open" id="open" defaultChecked={ open } onChange={this.setCheckbox}/>
                         <span className="checkBox"></span>
                     </label>
-                    <label htmlFor="copperative">
-                        <div className="label">Copperative:</div> <input type="checkbox" name="copperative" id="copperative" defaultChecked={cooperative} onChange={this.setCheckbox}/>
+                    <label htmlFor="cooperative">
+                        <div className="label">Cooperative:</div> <input type="checkbox" name="cooperative" id="cooperative" defaultChecked={cooperative} onChange={this.setCheckbox}/>
                         <span className="checkBox"></span>
                     </label>
                     <label htmlFor="houseAssign">
@@ -54,9 +101,21 @@ class NewGame extends Component {
                     <label htmlFor="code">
                         <div className="label">Invite Code:</div> <input type="text" name="code" value={code} onChange={(event)=>this.setField(event.target)}/>
                     </label>
+                    <div className="players">
+                        {players.length>0 && players.map(player=>{
+                            return (<label key={player.id} htmlFor={player.id}>
+                                <div className="label">{player.name}:</div> 
+                                <select name={player.id} id={player.id} value={player.house} onChange={this.setPlayer}>
+                                    <option value="">Not Assigned</option>
+                                    {this.playerOptions(player.id)}
+                                </select>
+                            </label>)})
+                        }
+                    </div>
+                    {error[1] && <div className="error">You can't repeat countries</div>}
                     <div className="formFooter">
                         <button type="submit">Create</button>
-                        <button type="reset">Cancel</button>
+                        <button onClick={this.props.history.goBack}>Cancel</button>
                     </div>
                 </form>
             </main>
@@ -64,4 +123,4 @@ class NewGame extends Component {
     }
 }
 
-export default NewGame;
+export default withRouter(NewGame);

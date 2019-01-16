@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 import Main from '../../Views/Main';
 import Games from '../../Views/Games';
+import Game from '../../Views/Game';
 import NewGame from '../../Views/NewGame';
 import Blog from '../../Views/Blog';
 import Header from '../Header';
@@ -33,7 +34,8 @@ class App extends Component {
               <Switch>
                   <Route exact path="/" component={()=><Main />} />
                   <Route exact path="/games/" component={()=><Games />} />
-                  <Route exact path="/games/game/" component={()=><NewGame />} />
+                  <Route exact path="/newgame/" component={()=><NewGame />} />
+                  <Route exact path="/games/:id" component={()=><Game />} />
                   <Route exact path="/blog/" component={()=><Blog />} />
                   <Route exact path="/rules/" component={()=><Main />} />
                   <Route exact path="/forum/" component={()=><Main />} />

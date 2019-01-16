@@ -48,7 +48,7 @@
   -o-transition: all 0.5s ease;
   transition: all 0.5s ease;
   color: $contrastColor;
-  z-index: 20;
+  z-index: -1;
   display: flex;
   flex-direction: column;
   justify-content: stretch;
@@ -136,6 +136,7 @@
 
   &.active{
     opacity: 1;
+    z-index: 20;
   }
 }
 
