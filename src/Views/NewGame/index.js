@@ -16,7 +16,15 @@ class NewGame extends Component {
             cooperative: false,
             houseAssign: false,
             code: '',
-            players: [{id: 1, name: 'Carles', house: ''},{id: 2, name: 'Player 2', house:''}],
+            started: false,
+            players: [{id: 1, name: 'Carles', house: ''},
+                {id: 2, name: 'Player 2', house:''},
+                {id: 3, name: 'Player 3', house:''},
+                {id: 4, name: 'Player 4', house:''},
+                {id: 5, name: 'Player 5', house:''},
+                {id: 6, name: 'Player 6', house:''},
+                {id: 7, name: 'Player 7', house:''},
+            ],
             error: [false,false],
             countries: ['austria', 'england', 'france', 'germany', 'italy', 'rusia', 'turkey']
         }
@@ -56,7 +64,7 @@ class NewGame extends Component {
     }
     sendForm = async (event) =>{
         event.preventDefault();
-        const {name, open, cooperative, houseAssign, code, players} = this.state;
+        const {name, open, cooperative, houseAssign, code, players, started} = this.state;
         let errorname = name ===''?true:false;
         let errorplayers = false;
         players.forEach(player=>{
@@ -65,7 +73,7 @@ class NewGame extends Component {
             errorplayers=count > 1?true:errorplayers;
         })
         if(!errorname && !errorplayers){
-            const result = await DBService.addDocument('diplomacy',{name, open, cooperative, houseAssign, code, players});
+            const result = await DBService.addDocument('diplomacy',{name, open, cooperative, houseAssign, code, started, players});
             if(result){
                 this.setState({name:'', open:false, cooperative:false, houseAssign:false, code:'',error:[errorname,errorplayers]},this.props.history.goBack)
             }

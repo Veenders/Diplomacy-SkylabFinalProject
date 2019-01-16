@@ -57,6 +57,11 @@ export default class DBService{
             callback(result);
         });
       }
+    static async getDocumentById(collection, id){
+        const query = DB.collection(collection).doc(id);
+        const doc = await query.get();
+        return { id: doc.id, ...doc.data()};
+    }
     static async getDocument(collection, field,value,comparator='=='){
         const query = DB.collection(collection).where(field,comparator,value);
         let result = null;

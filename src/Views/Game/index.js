@@ -2,29 +2,35 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router';
 
 import DBService from '../../Services/DBService';
+import Loading from '../../Components/Loading';
+import GameDetail from './GameDetail';
+import Diplomacy from '../../Components/diplomacy';
+import logo from '../../img/Logo.png';
+import './index.scss';
 
 class Game extends Component {
     constructor(props){
         super(props);
 
         this.state={
-            game: {}
+            game: {},
+            loading: true
         }
     }
     componentDidMount(){
         this.LoadData();
     }
     async LoadData (){
-        console.log(this.props.match.params.id)
-        const game = await DBService.getDocument("diplomacy","id",this.props.match.params.id);
-        this.setState({game});
+        this.setState({loading: true});
+        const game = await DBService.getDocumentById("diplomacy", this.props.match.params.id);
+        this.setState({game,loading:false});
     }
     render() {
-        const {game} = this.state;
-        console.log(game);
+        const {game,loading} = this.state;
         return (
             <main>
-                Game
+                <div className="Logo"><img src={logo} alt="Atomic Diplomacy"/></div>
+                {loading?<Loading />:game.started?<Diplomacy game={game} />:<GameDetail game={game} />}
             </main>
         );
     }

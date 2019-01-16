@@ -1,1 +1,59 @@
 @import '../../variables';
+
+.gameDetail{
+    background-color: white;
+    padding: 2em 0;
+    .gamePlayers{
+        border-top: 1px solid $primaryColor;
+    }
+    button{
+        padding: 0.5em 1em;
+        border-radius: 10px;
+        border: 1px solid $primaryColor;
+        background-color: $contrastColor;
+        color: $primaryColor;
+        font-size: 1.1em;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.6);
+        outline: none;
+        text-decoration: none;
+        margin-left: 1em;
+        &:hover{
+            background-color: $thirdColor;
+            box-shadow: 0px 3px 8px 0px rgba(0,0,0,0.6);
+        }
+    }
+    .fa-thumbs-up{
+        color: green;
+    }
+    .fa-thumbs-down{
+        color: red;
+    }
+}
+.GameBoard{
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+    align-items: center;
+    .Board{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    #tauler{
+        width: 100%;
+        margin: 0;
+    }
+    #mapsvg{
+        display: none;
+    }
+    @media (min-width:1200px){
+        align-items: stretch;
+        .Board{
+            flex-direction: row;
+            justify-content: space-around;
+        }
+        .Complements{
+            flex-grow: 1;
+        }
+    }
+}
