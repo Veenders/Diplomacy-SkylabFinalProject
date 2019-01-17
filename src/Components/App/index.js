@@ -15,12 +15,8 @@ class App extends Component {
   constructor(props){
     super(props);
     this.state = {
-      active: false,
       logged: false,
     }
-  }
-  openMenu = () => {
-    this.setState({active: !this.state.active});
   }
   Login = () => {
     this.setState({logged: !this.state.logged});
@@ -30,7 +26,7 @@ class App extends Component {
     return (
       <Router>
           <div className={`App ${active?'toggled':''}`}>
-              <Header active={active} openMenu={this.openMenu} logged={logged} loginfunct={this.Login}/>
+              <Header logged={logged} loginfunct={this.Login}/>
               <Switch>
                   <Route exact path="/" component={()=><Main />} />
                   <Route exact path="/games/" component={()=><Games />} />

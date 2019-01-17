@@ -5,27 +5,38 @@ import { withRouter } from 'react-router';
 import './index.scss';
 
 class Header extends Component {
+    constructor(props){
+        super(props);
+
+        this.state = {
+            active:false
+        }
+    }
+    openMenu = () => {
+        this.setState({active: !this.state.active});
+      }
     render() {
-        const {active, openMenu, logged, loginfunct} = this.props;
+        const {openMenu, logged, loginfunct} = this.props;
+        const {active} = this.state
         const pathname = this.props.location.pathname
         return (
             <React.Fragment>
                 <div className={`Background ${active? 'toggled':''}`} onClick={openMenu}>
                 </div>
-                <button type="button" className={`hamburger ${active?'is-open':'is-closed'}`} /*data-toggle="offcanvas"*/ onClick={openMenu}>
+                <button type="button" className={`hamburger ${active?'is-open':'is-closed'}`} /*data-toggle="offcanvas"*/ onClick={this.openMenu}>
                     <span className="hamb-top"></span>
                     <span className="hamb-middle"></span>
                     <span className="hamb-bottom"></span>
                 </button>
                 <nav className={`sideBar ${active? 'active':''}`}>
-                    <ul>
+                    <ul onClick={this.openMenu}>
                         <li className="sidebarBrand headtype">
                             <Link to="/">
                             Diplomacy
                             </Link>
                         </li>
                         <li className={`homeLink ${pathname==='/'?'active':''}`}>
-                            <Link to="/"><i className="fas fa-home"></i> Home</Link>
+                            <Link to="/" onClick={this.OpenMenu}><i className="fas fa-home"></i> Home</Link>
                         </li>
                         <li className={`gamesLink ${/\/games\/*/.test(pathname)?'active':''}`}>
                             <Link to="/games/"><i className="fas fa-dice-d20"></i> Games</Link>

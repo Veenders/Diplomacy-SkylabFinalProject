@@ -85,16 +85,24 @@ export default class DBService{
       }
     static async getContent(collection){
         let content=[];
+        console.log('entramos en servicio');
         try{
-            DB.collection(collection).get().then((querySnapshot) => {
+            const querySnapshot = await DB.collection(collection).get()
+            querySnapshot.forEach((doc) => {
+                const data = doc.data()
+                content.push( { id: doc.id, ...data } );
+            });
+            return content
+            /*DB.collection(collection).get().then((querySnapshot) => {
                 querySnapshot.forEach((doc) => {
                     const data = doc.data()
                     content.push( { id: doc.id, ...data } );
                 });
+                return content.push(content);
             });
-            return content;
+            return content*/
         }catch(error){
-
+            console.error(error)
         }
 
     }

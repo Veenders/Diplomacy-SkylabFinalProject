@@ -11,25 +11,28 @@ class Blog extends Component {
         super(props);
 
         this.state = {
-            loading: true,
+            loadingblog: true,
             posts: [],
         }
     }
     componentDidMount(){
         this.loadData();
     }
-    loadData = async() => {
-        this.setState({loading:true})
+    loadData = async () => {
+        try {
         const posts = await DBService.getContent("posts");
-        this.setState({posts,loading:false});
+        this.setState({posts,loadingblog:false});
+        } catch(error) {
+            console.error(error)
+        }
     }
     render() {
-        const {posts,loading} = this.state;
+        const {posts,loadingblog} = this.state;
         return (
             <main>
                 <div className="Logo"><img src={logo} alt="Atomic Diplomacy"/></div>
                 <h1>Blog Section</h1>
-                {loading?<Loading />:<PostsList posts={posts} />}
+                {loadingblog?<Loading />:<PostsList posts={posts} />}
             </main>
         );
     }
