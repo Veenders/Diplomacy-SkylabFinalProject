@@ -55,10 +55,11 @@ class NewGame extends Component {
         // eslint-disable-next-line eqeqeq
         const [player] = players.filter(player => player.id == id);
         return (
-            <React.Fragment>
-                {player.house!=='' && <option value={player.house}>{this.capitalize(player.house)}</option>}
-                {countries.length>0 && countries.map((country,i) => <option key={country+i} value={country}>{this.capitalize(country)}</option>)}
-            </React.Fragment>
+                <select name={player.id} id={player.id} value={player.house} onChange={this.setPlayer}>
+                    <option value="">Not Assigned</option>
+                    {player.house!=='' && <option value={player.house}>{this.capitalize(player.house)}</option>}
+                    {countries.length>0 && countries.map((country,i) => <option key={country+i} value={country}>{this.capitalize(country)}</option>)}
+                </select>
         )
 
     }
@@ -103,7 +104,7 @@ class NewGame extends Component {
                         <span className="checkBox"></span>
                     </label>
                     <label htmlFor="houseAssign">
-                        <div className="label">House Assign:</div> <input type="checkbox" name="houseAssign" id="houseAssign" defaultChecked={houseAssign} onChange={this.setCheckbox}/>
+                        <div className="label">House Assign Manually:</div> <input type="checkbox" name="houseAssign" id="houseAssign" defaultChecked={houseAssign} onChange={this.setCheckbox}/>
                         <span className="checkBox"></span>
                     </label>
                     <label htmlFor="code">
@@ -113,10 +114,7 @@ class NewGame extends Component {
                         {players.length>0 && players.map(player=>{
                             return (<label key={player.id} htmlFor={player.id}>
                                 <div className="label">{player.name}:</div> 
-                                <select name={player.id} id={player.id} value={player.house} onChange={this.setPlayer}>
-                                    <option value="">Not Assigned</option>
-                                    {this.playerOptions(player.id)}
-                                </select>
+                                {houseAssign?this.playerOptions(player.id):<div>Automatic Assign</div>}
                             </label>)})
                         }
                     </div>

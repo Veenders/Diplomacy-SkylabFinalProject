@@ -16,7 +16,7 @@ class Games extends Component {
         this.conexion = null;
     }
     async componentDidMount(){
-        this.conexion = DBService.getRealtimeContent('diplomacy', (games) => {
+        DBService.getRealtimeContent('diplomacy', (games) => {
           this.setState({games});
         });
     }

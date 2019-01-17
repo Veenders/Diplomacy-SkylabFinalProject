@@ -56,7 +56,7 @@ export default class DBService{
             });
             callback(result);
         });
-      }
+    }
     static async getDocumentById(collection, id){
         const query = DB.collection(collection).doc(id);
         const doc = await query.get();
