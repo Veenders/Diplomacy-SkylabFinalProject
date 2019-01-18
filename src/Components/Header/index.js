@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom";
+import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
+import AuthService from '../../Services/AuthService';
 import './index.scss';
 
 class Header extends Component {
@@ -14,9 +16,15 @@ class Header extends Component {
     }
     openMenu = () => {
         this.setState({active: !this.state.active});
-      }
+    }
+    logout = () =>{
+        const error = AuthService.logout();
+        if(!error){
+            this.props.history.push('/')
+        }
+    }
     render() {
-        const {openMenu, logged, loginfunct} = this.props;
+        const {openMenu, user} = this.props;
         const {active} = this.state
         const pathname = this.props.location.pathname
         return (
@@ -47,17 +55,17 @@ class Header extends Component {
                         <li className={`rulesLink ${/\/rules\/*/.test(pathname)?'active':''}`}>
                             <Link to="/rules/"><i className="fas fa-pencil-ruler"></i> Rules</Link>
                         </li>
-                        <li className={`forumLink ${/\/forum\/*/.test(pathname)?'active':''}`}>
+                        {user && <li className={`forumLink ${/\/forum\/*/.test(pathname)?'active':''}`}>
                             <Link to="/forum/"><i className="fab fa-forumbee"></i> Forum</Link>
-                        </li>
-                        <li className={`profileLink ${/\/profile\/*/.test(pathname)?'active':''}`}>
-                            <Link to="/profile/"><i className="fas fa-user"></i> My Profile</Link>
-                        </li>
-                        <li className={`adminLink ${/\/admin\/*/.test(pathname)?'active':''}`}>
+                        </li>}
+                        {user && <li className={`profileLink ${/\/profile\/*/.test(pathname)?'active':''}`}>
+                            <Link to={`/profile/${user.id}`}><i className="fas fa-user"></i> {user.name}'s Profile</Link>
+                        </li>}
+                        {user && user.rol ==='admin' && <li className={`adminLink ${/\/admin\/*/.test(pathname)?'active':''}`}>
                             <Link to="/admin/"><i className="fas fa-lock"></i> Admin</Link>
-                        </li>
+                        </li>}
                         <li className='login'>
-                            <Link to="/" onClick={loginfunct}>{!logged?<React.Fragment><i className="fas fa-sign-in-alt"></i> Login </React.Fragment>: <React.Fragment><i className="fas fa-sign-out-alt"></i> Logout </React.Fragment>}</Link>
+                            {!user?<Link to="/login/"><i className="fas fa-sign-in-alt"></i>Login</Link>:<span onClick={this.logout}><Link to="/"><i className="fas fa-sign-out-alt"></i> Logout </Link></span>}
                         </li>
                     </ul>
                 </nav>
@@ -66,4 +74,10 @@ class Header extends Component {
     }
 }
 
-export default withRouter(Header);
+const mapStateToProps = (state) => {
+    return {
+      user: state.userReducer.user
+    }
+}
+
+export default withRouter(connect(mapStateToProps)(Header));

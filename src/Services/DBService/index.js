@@ -73,6 +73,17 @@ export default class DBService{
 
         return result;
     }
+    static async getFilteredContent(collection, field,value,comparator='=='){
+        const query = DB.collection(collection).where(field,comparator,value);
+        let result = [];
+
+        const querySnapshot = await query.get();
+        querySnapshot.forEach((doc) => {
+            result.push({ id: doc.id, ...doc.data()});
+        });
+
+        return result;
+    }
     static async getRealtimeContent(collectionName, callback){
         DB.collection(collectionName).onSnapshot((querySnapshot) => {
             let content = []
@@ -82,7 +93,7 @@ export default class DBService{
             });
             callback(content);
         });
-      }
+    }
     static async getContent(collection){
         let content=[];
         console.log('entramos en servicio');
@@ -93,14 +104,6 @@ export default class DBService{
                 content.push( { id: doc.id, ...data } );
             });
             return content
-            /*DB.collection(collection).get().then((querySnapshot) => {
-                querySnapshot.forEach((doc) => {
-                    const data = doc.data()
-                    content.push( { id: doc.id, ...data } );
-                });
-                return content.push(content);
-            });
-            return content*/
         }catch(error){
             console.error(error)
         }

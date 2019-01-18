@@ -1,42 +1,49 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-//import video from '../../Img/MainVideo.mp4';
+import { connect } from 'react-redux';
+
+import AuthService from '../../Services/AuthService';
+import DBService from '../../Services/DBService';
+import { setUserInfo } from '../../Redux/actions/userActions';
 
 import Main from '../../Views/Main';
 import Games from '../../Views/Games';
 import Game from '../../Views/Game';
 import NewGame from '../../Views/NewGame';
-import Blog from '../../Views/Blog';
+import Posts from '../../Views/Posts';
 import Header from '../Header';
-import './styles.scss';
+import Login from '../auth/Login';
 import Component404 from '../../Views/Component404';
 
+import './styles.scss';
+
 class App extends Component {
-  constructor(props){
-    super(props);
-    this.state = {
-      logged: false,
-    }
-  }
-  Login = () => {
-    this.setState({logged: !this.state.logged});
+  componentDidMount(){
+    AuthService.registerAuthObserver(async (user) => {
+      let userData = null;
+      if (user) {
+        userData = await DBService.getDocumentById('users', user.uid);
+      } 
+      this.props.setUser(userData);
+    });
   }
   render() {
-    const {active, logged} = this.state
     return (
       <Router>
-          <div className={`App ${active?'toggled':''}`}>
-              <Header logged={logged} loginfunct={this.Login}/>
+          <div className='App'>
+              <Header/>
               <Switch>
                   <Route exact path="/" component={()=><Main />} />
                   <Route exact path="/games/" component={()=><Games />} />
                   <Route exact path="/newgame/" component={()=><NewGame />} />
                   <Route exact path="/games/:id" component={()=><Game />} />
-                  <Route exact path="/blog/" component={()=><Blog />} />
-                  <Route exact path="/rules/" component={()=><Main />} />
+                  <Route exact path="/blog/" component={()=><Posts category="blog"/>} />
+                  <Route exact path="/rules/" component={()=><Posts category="rules" />} />
                   <Route exact path="/forum/" component={()=><Main />} />
                   <Route exact path="/profile/" component={()=><Main />} />
                   <Route exact path="/admin/" component={()=><Main />} />
+                  <Route exact path="/login/" component={()=><Login />} />
+                  <Route exact path="/signup/" component={()=><Posts category="rules" />} />
                   <Route component={()=><Component404 />} />
               </Switch>
               <footer>Designed by Veenders</footer>
@@ -46,4 +53,10 @@ class App extends Component {
   }
 }
 
-export default App;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setUser: (userInfo) => { dispatch(setUserInfo(userInfo)) }
+  }
+}
+
+export default connect(null, mapDispatchToProps )(App);

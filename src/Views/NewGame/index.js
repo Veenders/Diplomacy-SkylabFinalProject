@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
+import { connect } from 'react-redux';
 
 import DBService from '../../Services/DBService';
-
+import Login from '../../Components/auth/Login';
 import './index.scss';
 import logo from '../../img/Logo.png';
 
@@ -17,14 +18,7 @@ class NewGame extends Component {
             houseAssign: false,
             code: '',
             started: false,
-            players: [{id: 1, name: 'Carles', house: ''},
-                {id: 2, name: 'Player 2', house:''},
-                {id: 3, name: 'Player 3', house:''},
-                {id: 4, name: 'Player 4', house:''},
-                {id: 5, name: 'Player 5', house:''},
-                {id: 6, name: 'Player 6', house:''},
-                {id: 7, name: 'Player 7', house:''},
-            ],
+            players: [],
             error: [false,false],
             countries: ['austria', 'england', 'france', 'germany', 'italy', 'rusia', 'turkey']
         }
@@ -85,6 +79,10 @@ class NewGame extends Component {
     }
     render() {
         const {name , open, cooperative, houseAssign, code, error, players} = this.state;
+        const {user} = this.props
+        if(!user){
+            return <Login />
+        }
         return (
             <main>
                 <div className="Logo"><img src={logo} alt="Atomic Diplomacy"/></div>
@@ -129,4 +127,10 @@ class NewGame extends Component {
     }
 }
 
-export default withRouter(NewGame);
+const mapStateToProps = (state) => {
+    return {
+      user: state.userReducer.user
+    }
+}
+
+export default withRouter(connect(mapStateToProps)(NewGame));

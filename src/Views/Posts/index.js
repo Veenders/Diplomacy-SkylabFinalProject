@@ -6,12 +6,12 @@ import logo from '../../img/Logo.png';
 import PostsList from '../../Components/postsList';
 import Loading from '../../Components/Loading';
 
-class Blog extends Component {
+class Posts extends Component {
     constructor(props){
         super(props);
 
         this.state = {
-            loadingblog: true,
+            loading: true,
             posts: [],
         }
     }
@@ -19,23 +19,25 @@ class Blog extends Component {
         this.loadData();
     }
     loadData = async () => {
+        const {category} = this.props
         try {
-        const posts = await DBService.getContent("posts");
-        this.setState({posts,loadingblog:false});
+        const posts = await DBService.getFilteredContent("posts","category",category);
+        this.setState({posts,loading:false});
         } catch(error) {
             console.error(error)
         }
     }
     render() {
-        const {posts,loadingblog} = this.state;
+        const {posts,loading} = this.state;
+        const {category} = this.props;
         return (
-            <main>
+            <main className="Posts">
                 <div className="Logo"><img src={logo} alt="Atomic Diplomacy"/></div>
-                <h1>Blog Section</h1>
-                {loadingblog?<Loading />:<PostsList posts={posts} />}
+                <h1>{category.charAt(0).toUpperCase()+category.slice(1)}</h1>
+                {loading?<Loading />:<PostsList posts={posts} />}
             </main>
         );
     }
 }
 
-export default Blog;
+export default Posts;
