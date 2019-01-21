@@ -66,6 +66,10 @@ class GameForm extends Component {
         )
 
     }
+    StartGame = (e) =>{
+        e.preventDefault();
+        console.log('Start Game')
+    }
     sendForm = async (event) =>{
         event.preventDefault();
         const {name, open, cooperative, houseAssign, code, players, started} = this.state;
@@ -132,6 +136,7 @@ class GameForm extends Component {
                     <div className="formFooter">
                         <button type="submit">{idgame?'Save':'Create'}</button>
                         <button type="reset" onClick={goBack}>Cancel</button>
+                        {players.length===7 && <button type="click" onClick={this.StartGame}>Start Game</button>}
                     </div>
                 </form>
             </main>

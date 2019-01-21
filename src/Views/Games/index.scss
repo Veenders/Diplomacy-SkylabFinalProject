@@ -18,6 +18,18 @@
         margin-right: 0.5em;
     }
 }
+.success{
+    background-color: lightgreen;
+    color: darkgreen;
+    border: 1px solid darkgreen;
+    padding: 0.5em;
+    width: 95%;
+    border-radius: 10px;
+    margin: 0 auto;
+}
+.started{
+    text-align: center;
+}
 .gameList{
     display: flex;
     flex-direction: row;

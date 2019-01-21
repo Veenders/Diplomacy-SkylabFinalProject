@@ -29,13 +29,18 @@ class NewGame extends Component {
         }
     }
     render() {
-        const {started, loading,userid} = this.state;
+        const {started, loading, userid} = this.state;
         const {user} = this.props
         if(loading){
             return <Loading />
         }
         if(!user){
             return <LoginView />
+        }
+        if(user && user.rol===5){
+            return (
+                <GameForm idgame={this.props.match.params.idgame} user={user} goBack={this.props.history.goBack}/>
+            );
         }
         if(started){
             return <NotAuthorized>Game Started, You aren't allowed to modify</NotAuthorized>

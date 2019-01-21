@@ -11,6 +11,7 @@ import Games from '../../Views/Games';
 import Game from '../../Views/Game';
 import NewGame from '../../Views/NewGame';
 import Posts from '../../Views/Posts';
+import UserView from '../../Views/UserView';
 import Header from '../Header';
 import Login from '../auth/Login';
 import Register from '../auth/Register';
@@ -43,7 +44,7 @@ class App extends Component {
                   <Route exact path="/blog/" component={()=><Posts category="blog"/>} />
                   <Route exact path="/rules/" component={()=><Posts category="rules" />} />
                   <Route exact path="/forum/" component={()=><Main />} />
-                  <Route exact path="/profile/" component={()=><Main />} />
+                  <Route exact path="/profile/:id" component={()=><UserView />} />
                   <Route exact path="/admin/" component={()=><Main />} />
                   <Route exact path="/login/" component={()=><Login />} />
                   <Route exact path="/register/" component={()=><Register />} />

@@ -59,7 +59,7 @@ class Header extends Component {
                             <Link to="/forum/"><i className="fab fa-forumbee"></i> Forum</Link>
                         </li>}
                         {user && <li className={`profileLink ${/\/profile\/*/.test(pathname)?'active':''}`}>
-                            <Link to={`/profile/${user.id}`}><i className="fas fa-user"></i> {user.name}'s Profile</Link>
+                            <Link to={`/profile/${user.id}`}>{user && user.image ?<img className="profileimg" src={user.image} alt={user.name} />:<i className="fas fa-user"></i>} {user.name}'s Profile</Link>
                         </li>}
                         {user && user.rol === 5 && <li className={`adminLink ${/\/admin\/*/.test(pathname)?'active':''}`}>
                             <Link to="/admin/"><i className="fas fa-lock"></i> Admin</Link>

@@ -13,9 +13,9 @@ const GameDetail = (props) => {
             </div>
             <div className="gamePlayers">
                 <h3>Players</h3>
-                {game.players.map(player => <p key={player.id}>{player.name}: {player.house===''?'Not Assigned':player.house.charAt(0).toUpperCase() + player.house.slice(1)}</p>)}
+                {game.players && game.players.map(player => <p key={player.id}>{player.name}: {player.house===''?'Not Assigned':player.house.charAt(0).toUpperCase() + player.house.slice(1)}</p>)}
             </div>
-            {userid && game.players.length<7 && game.players.filter(player => player.id === userid).length===0 && <button onClick={addPlayer}>Enroll Me</button>}
+            {userid && game.players && game.players.length<7 && game.players.filter(player => player.id === userid).length===0 && <button onClick={()=>addPlayer()}>Enroll Me</button>}
             <button onClick={props.history.goBack}>Back</button>
         </div>
     );
