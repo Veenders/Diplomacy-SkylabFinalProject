@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
+import { connect } from 'react-redux';
 
+import Login from '../auth/Login';
 import Map from './Map';
 import Messenger from './Messenger';
 
@@ -9,8 +11,7 @@ class Diplomacy extends Component {
         super(props);
         this.state={
             idgame:'YsvX5L96JnHofnU0MSZM',
-            activeplayer: 1,
-            players:[{id: 1, name: 'Carles', house: ''},
+            players:[{id: '80y6ERh0ljUKR3oBVoSkuQNhmWh1', name: 'Carles', house: ''},
             {id: 2, name: 'Player 2', house:''},
             {id: 3, name: 'Player 3', house:''},
             {id: 4, name: 'Player 4', house:''},
@@ -21,14 +22,18 @@ class Diplomacy extends Component {
         }
     }
     render() {
-        const {players,idgame,activeplayer} = this.state
+        const {players,idgame} = this.state
+        const {user} = this.props
+        if(!user){
+            return <Login />
+        }
         return (
             <div className="GameBoard">
                 <h1>Game Started</h1>
                 <div className="Board">
                     <Map />
                     <div className="Complements">
-                        <Messenger players={players} idgame={idgame} from={activeplayer}/>
+                        <Messenger players={players} idgame={idgame} from={user.id}/>
                     </div>
                 </div>
             </div>
@@ -36,4 +41,10 @@ class Diplomacy extends Component {
     }
 }
 
-export default withRouter(Diplomacy);
+const mapStateToProps = (state) => {
+    return {
+      user: state.userReducer.user
+    }
+}
+
+export default withRouter(connect(mapStateToProps)(Diplomacy));

@@ -13,6 +13,7 @@ class Messenger extends Component {
             to: 0,
             message: '',
             filter: 0,
+            online: false,
         }
     }
     async componentDidMount(){
@@ -22,7 +23,7 @@ class Messenger extends Component {
         });
     }
     setFilter = (filter) => {
-        this.setState({filter});
+        this.setState({filter,to:filter});
     }
     setField = (field) => {
         this.setState({[field.name]:field.value})
@@ -43,15 +44,15 @@ class Messenger extends Component {
         let {messages} =this.state;
         messages.diplomacy_id=idgame;
         messages.chat.push({to,from,message})
-        const success = DBService.updateDocument('messages', messages, idgame);
+        const success = DBService.setDocumentWithId('messages', messages, idgame);
         success && this.setState({message:''});
     }
     render() {
-        const {messages,message,filter} = this.state;
+        const {messages,message,to, filter,online} = this.state;
         const {players,from} = this.props;
         return (
             <div className="Messenger">
-                <h3>Messages</h3>
+                <h3>Messages</h3>{online&&<p>user online</p>}
                 <div className="HeaderMessage">
                     <button onClick={()=>this.setFilter(0)} className={filter===0?'activeTab':''}>All Players</button>
                     {players.filter(player=>player.id!==from).map(player=><button onClick={()=>this.setFilter(player.id)} key={player.id} className={filter===player.id?'activeTab':''}>{player.name}</button>)}
@@ -66,9 +67,9 @@ class Messenger extends Component {
                 <form id="MessengerForm" onSubmit={this.sendMessage}>
                     <div className="to">
                         Send To:
-                        <select name="to" id="to" value={filter} onChange={(event)=>this.setField(event.target)}>
+                        <select name="to" id="to" value={to} onChange={(event)=>this.setField(event.target)}>
                             <option value="0">All players</option>
-                            {players.map(player=><option value={player.id} key={player.id}>{player.name}</option>)}
+                            {players.filter(player=>player.id!==from).map(player=><option value={player.id} key={player.id}>{player.name}</option>)}
                         </select>
                     </div>
                     <div className="MessageBox">

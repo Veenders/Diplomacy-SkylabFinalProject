@@ -18,7 +18,7 @@ export default class DBService{
 
           DB.settings({timestampsInSnapshots:true});
     }
-    static async updateDocument(collectionName, document, id){
+    static async setDocumentWithId(collectionName, document, id){
         let success = true;
         
         try {
@@ -47,7 +47,7 @@ export default class DBService{
         return success;
     }
     static async getRealtimeDocument(collectionName, filterName, filterValue, callback, comparator='=='){
-        DB.collection(collectionName).where(filterName, comparator, filterValue)
+        return await DB.collection(collectionName).where(filterName, comparator, filterValue)
           .onSnapshot((querySnapshot) => {
             let result = null;
             querySnapshot.forEach((doc) => {
@@ -85,7 +85,7 @@ export default class DBService{
         return result;
     }
     static async getRealtimeContent(collectionName, callback){
-        DB.collection(collectionName).onSnapshot((querySnapshot) => {
+        return DB.collection(collectionName).onSnapshot((querySnapshot) => {
             let content = []
             querySnapshot.forEach((doc) => {
                 const data = doc.data()

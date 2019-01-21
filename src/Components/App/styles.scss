@@ -21,8 +21,15 @@ h7,
   font-family: 'Noto Serif SC', serif;
 }
 
+
 a{
   color: $primaryColor;
+  outline: none;
+}
+
+input,
+button{
+  outline: none;
 }
 
 code {

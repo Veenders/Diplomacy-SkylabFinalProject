@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router';
+import { connect } from 'react-redux';
 
 import DBService from '../../Services/DBService';
 import Loading from '../../Components/Loading';
@@ -22,18 +23,32 @@ class Game extends Component {
     }
     async LoadData (){
         this.setState({loading: true});
-        const game = await DBService.getDocumentById("diplomacy", this.props.match.params.id);
+        const game = await DBService.getDocumentById("diplomacy", this.props.match.params.idgame);
         this.setState({game,loading:false});
+    }
+    addPlayer = async() =>{
+        const {game} = this.state;
+        const {user} = this.props;
+        game.players.push({id: user.id, name: user.name, house: ''})
+        const success = await DBService.setDocumentWithId('diplomacy',game,game.id);
+        success && this.setState({successmessage:'You are added correctly to this game'});
     }
     render() {
         const {game,loading} = this.state;
+        const {user} = this.props;
         return (
             <main>
                 <div className="Logo"><img src={logo} alt="Atomic Diplomacy"/></div>
-                {loading?<Loading />:game.started?<Diplomacy game={game} />:<GameDetail game={game} />}
+                {loading?<Loading />:game.started?<Diplomacy game={game} />:<GameDetail game={game} addPlayer={this.addPlayer} userid={user?user.id:''}/>}
             </main>
         );
     }
 }
 
-export default withRouter(Game);
+const mapStateToProps = (state) => {
+    return {
+      user: state.userReducer.user
+    }
+}
+
+export default withRouter(connect(mapStateToProps)(Game));

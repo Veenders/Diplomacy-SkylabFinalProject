@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom";
 import { withRouter } from 'react-router';
+import { connect } from 'react-redux';
 
+import Loading from '../../Loading';
 import AuthService from '../../../Services/AuthService';
 import './index.scss';
 
@@ -12,8 +14,12 @@ class Login extends Component {
         this.state = {
             email: '',
             password: '',
-            error: '' 
+            error: '',
+            loading: true,
         }
+    }
+    componentDidUpdate(){
+        this.props.user && this.props.history.push('/');
     }
     login = async (e) => {
         e.preventDefault();
@@ -31,9 +37,10 @@ class Login extends Component {
             default:
                 this.props.history.push('home');
         }*/
-      }
+    }
     render() {
         const { email, password, error } = this.state;
+        if(this.props.login) return <Loading />;
         return (
             <div className="login">
                 <div className="modal">
@@ -43,14 +50,19 @@ class Login extends Component {
                         <input type="password" value={password} onChange={(e)=>{this.setState({password: e.target.value}) }} placeholder="Password"/>
                         <button type="submit">Login</button>
                     </form>
-                    <div className="error">
-                        {error && <p>{error}</p>}
-                    </div>
-                    <p>No tienes cuenta? <Link to='/SignUp/'>Crear cuenta</Link></p>
+                    {error && <div className="error">{error}</div>}
+                    <p>Do you have an account? <Link to='/register/'>Create Account</Link></p>
                 </div>
             </div>
         );
     }
 }
 
-export default withRouter(Login);
+const mapStateToProps = (state) => {
+    return {
+      user: state.userReducer.user,
+      login: state.userReducer.login
+    }
+}
+
+export default withRouter(connect(mapStateToProps)(Login));

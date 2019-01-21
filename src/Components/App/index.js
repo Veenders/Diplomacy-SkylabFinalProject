@@ -13,6 +13,7 @@ import NewGame from '../../Views/NewGame';
 import Posts from '../../Views/Posts';
 import Header from '../Header';
 import Login from '../auth/Login';
+import Register from '../auth/Register';
 import Component404 from '../../Views/Component404';
 
 import './styles.scss';
@@ -23,6 +24,7 @@ class App extends Component {
       let userData = null;
       if (user) {
         userData = await DBService.getDocumentById('users', user.uid);
+        AuthService.registerUserStatus();
       } 
       this.props.setUser(userData);
     });
@@ -36,14 +38,15 @@ class App extends Component {
                   <Route exact path="/" component={()=><Main />} />
                   <Route exact path="/games/" component={()=><Games />} />
                   <Route exact path="/newgame/" component={()=><NewGame />} />
-                  <Route exact path="/games/:id" component={()=><Game />} />
+                  <Route exact path="/games/:idgame" component={()=><Game />} />
+                  <Route exact path="/games/:idgame/edit" component={()=><NewGame />} />
                   <Route exact path="/blog/" component={()=><Posts category="blog"/>} />
                   <Route exact path="/rules/" component={()=><Posts category="rules" />} />
                   <Route exact path="/forum/" component={()=><Main />} />
                   <Route exact path="/profile/" component={()=><Main />} />
                   <Route exact path="/admin/" component={()=><Main />} />
                   <Route exact path="/login/" component={()=><Login />} />
-                  <Route exact path="/signup/" component={()=><Posts category="rules" />} />
+                  <Route exact path="/register/" component={()=><Register />} />
                   <Route component={()=><Component404 />} />
               </Switch>
               <footer>Designed by Veenders</footer>
