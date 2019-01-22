@@ -38,6 +38,9 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
+        .Map{
+            min-width: 50%;
+        }
     }
     #tauler{
         width: 100%;

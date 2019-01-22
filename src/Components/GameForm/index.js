@@ -17,6 +17,7 @@ class GameForm extends Component {
             started: false,
             players: [],
             error: [false,false],
+            user:'',
             countries: ['austria', 'england', 'france', 'germany', 'italy', 'rusia', 'turkey']
         }
     }
@@ -25,13 +26,13 @@ class GameForm extends Component {
         if(idgame){
             this.loadData()
         }else{
-            this.setState({players:[{id: user.id, name: user.name, house:''}]});
+            this.setState({user:user.id,players:[{id: user.id, name: user.name, house:''}]});
         }
     }
     loadData = async() => {
         const {idgame} = this.props
-        const {name, open, cooperative, houseAssign, code, players, started} = await DBService.getDocumentById("diplomacy", idgame);
-        this.setState({name, open, cooperative, houseAssign, code, players, started});
+        const {name, open, cooperative, houseAssign, code, players, started, user} = await DBService.getDocumentById("diplomacy", idgame);
+        this.setState({name, open, cooperative, houseAssign, code, players, started, user});
     }
     setField = (field) => {
         this.setState({[field.name]:field.value})
@@ -69,8 +70,8 @@ class GameForm extends Component {
     }
     sendForm = async (event) =>{
         event.preventDefault();
-        const {name, open, cooperative, houseAssign, code, players, started} = this.state;
-        const {user,idgame} = this.props;
+        const {name, open, cooperative, houseAssign, code, players, user, started} = this.state;
+        const {idgame} = this.props;
         let errorname = name ===''?true:false;
         let errorplayers = false;
         players.forEach(player=>{
@@ -81,9 +82,9 @@ class GameForm extends Component {
         if(!errorname && !errorplayers){
             let result = false
             if(idgame){
-                result = await DBService.setDocumentWithId('diplomacy',{name, open, cooperative, houseAssign, code, players},idgame);
+                result = await DBService.setDocumentWithId('diplomacy',{name, open, cooperative, houseAssign, code, players, user, started},idgame);
             }else{
-                result = await DBService.addDocument('diplomacy',{name, open, cooperative, houseAssign, code, started, user:user.id, players});
+                result = await DBService.addDocument('diplomacy',{name, open, cooperative, houseAssign, code, user, players, started});
             }
             if(result){
                 this.setState({name:'', open:false, cooperative:false, houseAssign:false, code:'',error:[errorname,errorplayers]},this.props.goBack)
@@ -94,8 +95,8 @@ class GameForm extends Component {
       
     }
     render() {
-        const {name , open, cooperative, houseAssign, code, error, players, started} = this.state;
-        const {goBack, idgame, user} = this.props;
+        const {name , open, cooperative, houseAssign, code, error, players, started, user} = this.state;
+        const {goBack, idgame} = this.props;
         return (
             <main>
                 <div className="Logo"><img src={logo} alt="Atomic Diplomacy"/></div>

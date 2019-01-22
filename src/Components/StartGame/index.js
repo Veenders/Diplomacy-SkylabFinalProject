@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import DBService from '../../Services/DBService';
+
 class StartGame extends Component {
     constructor(props){
         super(props)
@@ -9,15 +11,41 @@ class StartGame extends Component {
         }
     }
     CheckPlayers = (players) =>{
-        console.log('CheckPlayers',players)
+        console.log('checkPlayers')
+        let repeatcountry = false;
+        let countryNA = false;
+        let errormessage = '';
+        players.forEach(player=>{
+            let count = 0;
+            players.forEach(item=>player.house===item.house && player.house!==''?count++:count)
+            repeatcountry=count > 1?true:repeatcountry;
+            countryNA = player.house===''?true:countryNA;
+        })
+        if(repeatcountry) {errormessage = 'Some player have the same country. ';}
+        if(countryNA){errormessage +='Some player don\'t have assigned any country';}
+        return errormessage===''?players:errormessage;
     }
     SetPlayers = (players) =>{
-        console.log('SetPlayers',players)
+        console.log('SetPlayers')
+        let countries = ['austria', 'england', 'france', 'germany', 'italy', 'rusia', 'turkey']
+        players.forEach(player=>{
+            [player.house] = countries.splice(parseInt(Math.random()*countries.length),1)
+        })
+        return players;
     }
-    StartGame = (e) =>{
+    StartGame = async(e) =>{
         e.preventDefault();
-        const {game} = this.props;
+        const {game,idgame} = this.props;
+        await DBService.setDocumentWithId('diplomacy', game, idgame);
         const players = game.houseAssign? this.CheckPlayers(game.players):this.SetPlayers(game.players)
+        if(typeof players==='string'){
+            this.setState({errormess:players});
+            return;
+        }
+        this.setState({errormess:''});
+        console.log(typeof players, players);
+
+
     }
     render() {
         const {errormess} = this.state;
