@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 import DBService from '../../Services/DBService';
 import logo from '../../img/Logo.png';
+import StartGame from '../StartGame';
 
 class GameForm extends Component {
     constructor(props){
@@ -66,10 +67,6 @@ class GameForm extends Component {
         )
 
     }
-    StartGame = (e) =>{
-        e.preventDefault();
-        console.log('Start Game')
-    }
     sendForm = async (event) =>{
         event.preventDefault();
         const {name, open, cooperative, houseAssign, code, players, started} = this.state;
@@ -84,7 +81,7 @@ class GameForm extends Component {
         if(!errorname && !errorplayers){
             let result = false
             if(idgame){
-                result = await DBService.setDocumentWithId('diplomacy',{name, open, cooperative, houseAssign, code, started, user:user.id, players},idgame);
+                result = await DBService.setDocumentWithId('diplomacy',{name, open, cooperative, houseAssign, code, players},idgame);
             }else{
                 result = await DBService.addDocument('diplomacy',{name, open, cooperative, houseAssign, code, started, user:user.id, players});
             }
@@ -97,8 +94,8 @@ class GameForm extends Component {
       
     }
     render() {
-        const {name , open, cooperative, houseAssign, code, error, players} = this.state;
-        const {goBack, idgame} = this.props;
+        const {name , open, cooperative, houseAssign, code, error, players, started} = this.state;
+        const {goBack, idgame, user} = this.props;
         return (
             <main>
                 <div className="Logo"><img src={logo} alt="Atomic Diplomacy"/></div>
@@ -136,7 +133,7 @@ class GameForm extends Component {
                     <div className="formFooter">
                         <button type="submit">{idgame?'Save':'Create'}</button>
                         <button type="reset" onClick={goBack}>Cancel</button>
-                        {players.length===7 && <button type="click" onClick={this.StartGame}>Start Game</button>}
+                        {players.length===7 && <StartGame type="click" onClick={this.StartGame} game={{name, open, cooperative, houseAssign, code, started, user, players}} idgame={idgame} />}
                     </div>
                 </form>
             </main>
