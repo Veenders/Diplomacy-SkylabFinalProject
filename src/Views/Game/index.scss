@@ -39,8 +39,9 @@
         flex-direction: column;
         justify-content: center;
         .Map{
-            background-color: blue;
+            background-color:#DDDDDD;
             width: 837px;
+            height: 768px;
             margin: 0;
             padding: 0;
             display: block;
@@ -54,8 +55,13 @@
             }
             .army, .fleet{
                 position: absolute;
-                width: 50px;
                 z-index: 2;
+            }
+            .army{
+                width: 40px;
+            }
+            .fleet{
+                width: 50px;
             }
         }
     }

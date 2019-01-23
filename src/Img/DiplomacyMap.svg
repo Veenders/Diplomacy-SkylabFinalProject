@@ -89,11 +89,11 @@ Created for Diplomap (http://www.games2relax.net/diplomap/)
 	<use xlink:href="#SC" transform="translate(326,376)"/>
 </g>
 <g title="Bulgaria (ec)">
-	<polyline id="Bulec" class="l" points="413,464 412,454 420,451 426,450 422,441 425,427 429,426 430,423 422,420 410,420 404,422 398,427 390,425 382,427 375,423 370,425 367,421 365,425 368,433 371,438"/>
+	<polyline id="Bul" class="l" points="413,464 412,454 420,451 426,450 422,441 425,427 429,426 430,423 422,420 410,420 404,422 398,427 390,425 382,427 375,423 370,425 367,421 365,425 368,433 371,438"/>
 	<text x="395" y="443">Bul</text>
 </g>
 <g title="Bulgaria (sc)">
-	<polyline id="Bulsc" class="l" points="371,438 366,439 371,456 365,461 369,464 376,464 388,460 392,472 400,468 408,470 413,464 412,454"/>
+	<polyline id="Bul" class="l" points="371,438 366,439 371,456 365,461 369,464 376,464 388,460 392,472 400,468 408,470 413,464 412,454"/>
 	<use xlink:href="#SC" transform="translate(377,444)"/>
 </g>
 <g title="Burgundy">
