@@ -39,17 +39,27 @@
         flex-direction: column;
         justify-content: center;
         .Map{
-            min-width: 50%;
+            background-color: blue;
+            width: 837px;
+            margin: 0;
+            padding: 0;
+            display: block;
+            position: relative;
+            #map{
+                position: absolute;
+                width: 100%;
+                top: 0;
+                left: 0;
+                z-index: 1;
+            }
+            .army, .fleet{
+                position: absolute;
+                width: 50px;
+                z-index: 2;
+            }
         }
     }
-    #tauler{
-        width: 100%;
-        margin: 0;
-    }
-    #mapsvg{
-        display: none;
-    }
-    @media (min-width:1200px){
+    @media (min-width:1330px){
         align-items: stretch;
         .Board{
             flex-direction: row;
@@ -145,7 +155,18 @@
                         border-radius: 5px;
                     }
                     button{
-                        padding: 1em 0.5em;
+                        padding: 0.5em 1em;
+                        border-radius: 10px;
+                        border: 1px solid $primaryColor;
+                        background-color: $contrastColor;
+                        color: $primaryColor;
+                        font-size: 1.1em;
+                        outline: none;
+                        text-decoration: none;
+                        &:hover{
+                            background-color: $thirdColor;
+                            box-shadow: 0px 3px 8px 0px rgba(0,0,0,0.6);
+                        }
 
                     }
                 }

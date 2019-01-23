@@ -1,40 +1,29 @@
 import React, { Component } from 'react';
 import { SvgLoader, SvgProxy } from 'react-svgmt';
-import MapSVG from './../../../img/DiplomacyMaptry.svg';
+import MapSVG from './../../../img/DiplomacyMap.svg';
 import army from './../../../img/army.svg';
-import flet from './../../../img/flet.svg'
+import fleet from './../../../img/fleet.svg'
 
 class Map extends Component {
     componentDidMount (){
-        //const canvas = this.refs.canvas;
-        //const ctx = canvas.getContext("2d");
-        //const img = this.refs.map;
 
-        //img.onload = () => {
-          //  ctx.drawImage(img,0,0);
-        //}
     }
     TerritoryClicked = (event) =>{
-        console.log(event.target)
+        console.log(event.target.id);
+    }
+    ArmyDroped = (army) =>{
+        console.log(army);
     }
     render() {
         return (
             <div className="Map">
-                {/*<canvas ref="canvas" id="tauler" width={837} height={768} />
-                <img ref="map" src={MapSVG} alt="Map" id="mapsvg"/>*/}
-                <SvgLoader path={MapSVG} onClick={this.TerritoryClicked}>
+                <SvgLoader id="map" ref="map" path={MapSVG} onClick={this.TerritoryClicked} width={837} height={768}>
                     <SvgProxy selector=".l" fill="#FFFFDD" stroke="black" />
-                    <SvgProxy selector=".w" fill="##99CCFF" stroke="black" />
-                    <SvgProxy selector="#Ank" fill="red" />
-                    <SvgProxy selector="#NTH" fill="red" />
-                    <SvgProxy selector="#NWG" fill="red" ></SvgProxy>
+                    <SvgProxy selector=".w" fill="#99CCFF" stroke="black" />
+                    <SvgProxy selector=".s" fill="#DDDDDD" stroke="black" />
                 </SvgLoader>
-                <div>
-                    <SvgLoader path={army} fill="red" stroke="red">
-                        <SvgProxy selector="path" fill="red" stroke="red" />
-                    </SvgLoader>
-                </div>
-
+                <SvgLoader ref="army" className="army" id="army" path={army} onClick={()=>this.ArmyDroped('army')} style={{top:'460pt',left:'500pt'}}/>
+                <SvgLoader ref="fleet" className="fleet" id="fleet" path={fleet} onClick={()=>this.ArmyDroped('fleet')} style={{top: '250pt',left:'308pt', fill: 'blue'}}/>
             </div>
         );
     }

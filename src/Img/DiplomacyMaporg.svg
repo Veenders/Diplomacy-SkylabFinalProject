@@ -31,12 +31,12 @@ Created for Diplomap (http://www.games2relax.net/diplomap/)
 	<polygon class="w" points="362,33 357,39 343,44 324,54 320,64 310,75 309,84 303,86 292,111 277,132 269,134 264,142 258,141 236,154 198,154 171,181 171,197 158,193 152,194 154,188 161,185 162,181   148,177 148,0 362,0"/>
 	<text x="220" y="70">NWG</text>
 </g>
-<g title="North Sea" >
-	<path id="NTH" class="w" d="M171,197 L171,181 A27,27 0,0,1 198,154 L241,154 L241,224 L248,224 L245,237 L211,237 L211,301 L173,301 L165,293 L140,197Z"/>
+<g title="North Sea">
+	<path class="w" d="M171,197 L171,181 A27,27 0,0,1 198,154 L241,154 L241,224 L248,224 L245,237 L211,237 L211,301 L173,301 L165,293 L140,197Z"/>
 	<text x="190" y="230">NTH</text>
 </g>
 
-<g title="Switzerland" >
+<g title="Switzerland">
 	<polygon class="s" points="209,363 208,367 194,382 197,385 203,379 207,386 213,387 221,385 227,390 229,385 243,388 245,384 241,378 234,374 234,366 232,363 225,362 222,365"/>
 	<text x="215" y="378">Swi</text>
 </g>
@@ -52,7 +52,7 @@ Created for Diplomap (http://www.games2relax.net/diplomap/)
 	<polygon class="l" points="331,454 331,477 335,480 339,487 350,477 350,471 346,466 346,452 337,446 330,445"/>
 	<text x="333" y="460">Alb</text>
 </g>
-<g title="Ankara" id="Ank">
+<g title="Ankara">
 	<polygon class="l" points="555,438 551,437 520,441 514,438 511,440 502,433 481,438 470,447 464,457 468,461 468,479 466,491 473,491 490,480 501,482 508,480 531,460 546,462 555,460 557,449"/> 
 	<text x="510" y="455">Ank</text>
 	<use xlink:href="#SC" transform="translate(482,469)"/>
@@ -379,6 +379,15 @@ Created for Diplomap (http://www.games2relax.net/diplomap/)
 	<text x="155" y="254">Yor</text>
 </g><defs>
 
+<g id="A">
+	<path d="M9,-6 L2,0 M9,6 L0,0"/>
+	<path d="M-11,-6 v4 h17 a2,2 0,0 0 0,-4z"/>
+	<circle r="6"/>
+</g>
+<g id="F">
+	<polygon points="-2,-3 10,-3 -2,-13"/>
+	<polygon points="-12,-1 -6,5 6,5 12,-1"/>
+</g>
 <g id="sc"> <!-- colored SC -->
 	<circle r="4"/>
 </g>
@@ -408,4 +417,26 @@ Created for Diplomap (http://www.games2relax.net/diplomap/)
 <g title="Constantinople"><use xlink:href="#sc" class="Turkey" transform="translate(429,460)"/></g>
 <g title="Smyrna"><use xlink:href="#sc" class="Turkey" transform="translate(424,502)"/></g>
 
+<g title="Vienna"><use xlink:href="#A" id="Vienna" class="Austria" transform="translate(314,360)"/></g>
+<g title="Budapest"><use xlink:href="#A" id="Budapest" class="Austria" transform="translate(353,378)"/></g>
+<g title="Trieste"><use xlink:href="#F" id="Trieste" class="Austria" transform="translate(305,412)"/></g>
+<g title="London"><use xlink:href="#F" id="London" class="England" transform="translate(162,281)"/></g>
+<g title="Edinburgh"><use xlink:href="#F" id="Edinburgh" class="England" transform="translate(157,210)"/></g>
+<g title="Liverpool"><use xlink:href="#A" id="Liverpool" class="England" transform="translate(142,241)"/></g>
+<g title="Paris"><use xlink:href="#A" id="Paris" class="France" transform="translate(162,346)"/></g>
+<g title="Marseilles"><use xlink:href="#A" id="Marseilles" class="France" transform="translate(184,402)"/></g>
+<g title="Brest"><use xlink:href="#F" id="Brest" class="France" transform="translate(125,334)"/></g>
+<g title="Berlin"><use xlink:href="#A" id="Berlin" class="Germany" transform="translate(279,283)"/></g>
+<g title="Munich"><use xlink:href="#A" id="Munich" class="Germany" transform="translate(243,347)"/></g>
+<g title="Kiel"><use xlink:href="#F" id="Kiel" class="Germany" transform="translate(243,295)"/></g>
+<g title="Rome"><use xlink:href="#A" id="Rome" class="Italy" transform="translate(264,452)"/></g>
+<g title="Venice"><use xlink:href="#A" id="Venice" class="Italy" transform="translate(250,408)"/></g>
+<g title="Naples"><use xlink:href="#F" id="Naples" class="Italy" transform="translate(299,505)"/></g>
+<g title="Moscow"><use xlink:href="#A" id="Moscow" class="Russia" transform="translate(505,226)"/></g>
+<g title="Warsaw"><use xlink:href="#A" id="Warsaw" class="Russia" transform="translate(361,315)"/></g>
+<g title="St Petersburg (sc)"><use xlink:href="#F" id="St_Petersburg" class="Russia" transform="translate(418,205)"/></g>
+<g title="Sevastopol"><use xlink:href="#F" id="Sevastopol" class="Russia" transform="translate(515,330)"/></g>
+<g title="Constantinople"><use xlink:href="#A" id="Constantinople" class="Turkey" transform="translate(439,473)"/></g>
+<g title="Smyrna"><use xlink:href="#A" id="Smyrna" class="Turkey" transform="translate(490,505)"/></g>
+<g title="Ankara"><use xlink:href="#F" id="Ankara" class="Turkey" transform="translate(500,460)"/></g>
 </svg>
