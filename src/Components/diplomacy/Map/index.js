@@ -4,7 +4,7 @@ import MapSVG from './../../../img/DiplomacyMap.svg';
 import army from './../../../img/army.svg';
 import fleet from './../../../img/fleet.svg'
 import datamap from './../../../data/map';
-import armies from './../../../data/country';
+import countries from './../../../data/country';
 
 const _MAPWIDTH = 837;
 const _MAPHEIGHT = 768;
