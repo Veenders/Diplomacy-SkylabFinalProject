@@ -12,12 +12,13 @@ class GameForm extends Component {
             name: '',
             open: false,
             cooperative: false,
-            houseAssign: false,
+            countryAssign: false,
             code: '',
             started: false,
             players: [],
             error: [false,false],
             user:'',
+            numturn: 0,
             countries: ['austria', 'england', 'france', 'germany', 'italy', 'rusia', 'turkey']
         }
     }
@@ -26,13 +27,13 @@ class GameForm extends Component {
         if(idgame){
             this.loadData()
         }else{
-            this.setState({user:user.id,players:[{id: user.id, name: user.name, house:''}]});
+            this.setState({user:user.id,players:[{id: user.id, name: user.name, country:''}]});
         }
     }
     loadData = async() => {
         const {idgame} = this.props
-        const {name, open, cooperative, houseAssign, code, players, started, user} = await DBService.getDocumentById("diplomacy", idgame);
-        this.setState({name, open, cooperative, houseAssign, code, players, started, user});
+        const {name, open, cooperative, countryAssign, code, players, started, user, numturn} = await DBService.getDocumentById("diplomacy", idgame);
+        this.setState({name, open, cooperative, countryAssign, code, players, started, user, numturn});
     }
     setField = (field) => {
         this.setState({[field.name]:field.value})
@@ -46,10 +47,10 @@ class GameForm extends Component {
         let { players, countries } = this.state;
         // eslint-disable-next-line eqeqeq
         const [player] = players.filter(player => player.id == event.target.name);
-        player.house!=='' && countries.push(player.house);
+        player.country!=='' && countries.push(player.country);
         const index = countries.indexOf(event.target.value);
         index !== -1 && countries.splice(index,1);
-        player.house = event.target.value;
+        player.country = event.target.value;
         players = players.map(item =>item.id===player.id?player:item);
         countries.sort();
         this.setState({players,countries}); 
@@ -60,9 +61,9 @@ class GameForm extends Component {
         // eslint-disable-next-line eqeqeq
         const [player] = players.filter(player => player.id == id);
         return (
-                <select name={player.id} id={player.id} value={player.house} onChange={this.setPlayer}>
+                <select name={player.id} id={player.id} value={player.country} onChange={this.setPlayer}>
                     <option value="">Not Assigned</option>
-                    {player.house!=='' && <option value={player.house}>{this.capitalize(player.house)}</option>}
+                    {player.country!=='' && <option value={player.country}>{this.capitalize(player.country)}</option>}
                     {countries.length>0 && countries.map((country,i) => <option key={country+i} value={country}>{this.capitalize(country)}</option>)}
                 </select>
         )
@@ -70,24 +71,25 @@ class GameForm extends Component {
     }
     sendForm = async (event) =>{
         event.preventDefault();
-        const {name, open, cooperative, houseAssign, code, players, user, started} = this.state;
+        const {name, open, cooperative, countryAssign, code, players, user, started} = this.state;
+        const numturn = parseInt(this.state.numturn);
         const {idgame} = this.props;
         let errorname = name ===''?true:false;
         let errorplayers = false;
         players.forEach(player=>{
             let count = 0;
-            players.forEach(item=>player.house===item.house && player.house!==''?count++:count)
+            players.forEach(item=>player.country===item.country && player.country!==''?count++:count)
             errorplayers=count > 1?true:errorplayers;
         })
         if(!errorname && !errorplayers){
             let result = false
             if(idgame){
-                result = await DBService.setDocumentWithId('diplomacy',{name, open, cooperative, houseAssign, code, players, user, started},idgame);
+                result = await DBService.setDocumentWithId('diplomacy',{name, open, cooperative, countryAssign, code, players, user, started, numturn},idgame);
             }else{
-                result = await DBService.addDocument('diplomacy',{name, open, cooperative, houseAssign, code, user, players, started});
+                result = await DBService.addDocument('diplomacy',{name, open, cooperative, countryAssign, code, user, players, started, numturn});
             }
             if(result){
-                this.setState({name:'', open:false, cooperative:false, houseAssign:false, code:'',error:[errorname,errorplayers]},this.props.goBack)
+                this.setState({name:'', open:false, cooperative:false, countryAssign:false, code:'',error:[errorname,errorplayers]},this.props.goBack)
             }
         }else{
             this.setState({error:[errorname,errorplayers]});
@@ -95,7 +97,7 @@ class GameForm extends Component {
       
     }
     render() {
-        const {name , open, cooperative, houseAssign, code, error, players, started, user} = this.state;
+        const {name , open, cooperative, countryAssign, code, error, players, started, user, numturn} = this.state;
         const {goBack, idgame} = this.props;
         return (
             <main>
@@ -115,9 +117,12 @@ class GameForm extends Component {
                         <div className="label">Cooperative:</div> <input type="checkbox" name="cooperative" id="cooperative" checked={cooperative} onChange={this.setCheckbox}/>
                         <span className="checkBox"></span>
                     </label>
-                    <label htmlFor="houseAssign">
-                        <div className="label">House Assign Manually:</div> <input type="checkbox" name="houseAssign" id="houseAssign" checked={houseAssign} onChange={this.setCheckbox}/>
+                    <label htmlFor="countryAssign">
+                        <div className="label">country Assign Manually:</div> <input type="checkbox" name="countryAssign" id="countryAssign" checked={countryAssign} onChange={this.setCheckbox}/>
                         <span className="checkBox"></span>
+                    </label>
+                    <label htmlFor="numturn">
+                        <div className="label">Number of Turns:</div> <input type="text" name="numturn" value={numturn} onChange={(event)=>this.setField(event.target)}/>
                     </label>
                     <label htmlFor="code">
                         <div className="label">Invite Code:</div> <input type="text" name="code" value={code} onChange={(event)=>this.setField(event.target)}/>
@@ -126,7 +131,7 @@ class GameForm extends Component {
                         {players.length>0 && players.map(player=>{
                             return (<label key={player.id} htmlFor={player.id}>
                                 <div className="label">{player.name}:</div> 
-                                {houseAssign?this.playerOptions(player.id):<div>Automatic Assign</div>}
+                                {countryAssign?this.playerOptions(player.id):<div>Automatic Assign</div>}
                             </label>)})
                         }
                     </div>
@@ -134,7 +139,7 @@ class GameForm extends Component {
                     <div className="formFooter">
                         <button type="submit">{idgame?'Save':'Create'}</button>
                         <button type="reset" onClick={goBack}>Cancel</button>
-                        {players.length===7 && <StartGame type="click" onClick={this.StartGame} game={{name, open, cooperative, houseAssign, code, started, user, players}} idgame={idgame} />}
+                        {players.length===7 && <StartGame type="click" onClick={this.StartGame} game={{name, open, cooperative, countryAssign, code, started, user, players}} idgame={idgame} />}
                     </div>
                 </form>
             </main>

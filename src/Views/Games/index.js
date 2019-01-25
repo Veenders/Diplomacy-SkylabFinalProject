@@ -63,7 +63,7 @@ class Games extends Component {
     addPlayer = async(game, revised=false) =>{
         if(game.code==='' || revised){
             const {user} = this.props;
-            game.players.push({id: user.id, name: user.name, house: ''})
+            game.players.push({id: user.id, name: user.name, country: ''})
             const success = await DBService.setDocumentWithId('diplomacy',game,game.id);
             success && this.setState({successmessage:'You are added correctly to the game'});
         }else{

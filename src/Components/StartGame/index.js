@@ -17,9 +17,9 @@ class StartGame extends Component {
         let errormessage = '';
         players.forEach(player=>{
             let count = 0;
-            players.forEach(item=>player.house===item.house && player.house!==''?count++:count)
+            players.forEach(item=>player.country===item.country && player.country!==''?count++:count)
             repeatcountry=count > 1?true:repeatcountry;
-            countryNA = player.house===''?true:countryNA;
+            countryNA = player.country===''?true:countryNA;
         })
         if(repeatcountry) {errormessage = 'Some player have the same country. ';}
         if(countryNA){errormessage +='Some player don\'t have assigned any country';}
@@ -29,7 +29,7 @@ class StartGame extends Component {
         console.log('SetPlayers')
         let countries = ['austria', 'england', 'france', 'germany', 'italy', 'rusia', 'turkey']
         players.forEach(player=>{
-            [player.house] = countries.splice(parseInt(Math.random()*countries.length),1)
+            [player.country] = countries.splice(parseInt(Math.random()*countries.length),1)
         })
         return players;
     }
@@ -37,12 +37,13 @@ class StartGame extends Component {
         e.preventDefault();
         const {game,idgame} = this.props;
         await DBService.setDocumentWithId('diplomacy', game, idgame);
-        const players = game.houseAssign? this.CheckPlayers(game.players):this.SetPlayers(game.players)
+        const players = game.countryAssign? this.CheckPlayers(game.players):this.SetPlayers(game.players)
         if(typeof players==='string'){
             this.setState({errormess:players});
             return;
         }
         this.setState({errormess:''});
+        const turns = [{id: idgame+1, }]
         console.log(typeof players, players);
 
 

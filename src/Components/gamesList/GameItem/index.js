@@ -3,7 +3,7 @@ import frontimage from '../../../img/gamesFront.jpg'
 import { Link } from "react-router-dom";
 
 const GameItem = (props) => {
-    const {id, name, open, cooperative, houseAssign, user, players, started} = props.game
+    const {id, name, open, cooperative, countryAssign, user, players, started} = props.game
     const {userid, addPlayer} = props;
     return (
         <div className="gameCard">
@@ -14,7 +14,7 @@ const GameItem = (props) => {
             <div className="cardBody">
                 <p>Open Game {open?<i className="far fa-thumbs-up"></i>:<i className="far fa-thumbs-down"></i>}</p>
                 <p>Cooperative Game {cooperative?<i className="far fa-thumbs-up"></i>:<i className="far fa-thumbs-down"></i>}</p>
-                <p>House Assign {houseAssign?<i className="far fa-thumbs-up"></i>:<i className="far fa-thumbs-down"></i>}</p>
+                <p>country Assign {countryAssign?<i className="far fa-thumbs-up"></i>:<i className="far fa-thumbs-down"></i>}</p>
                 <p>Players Enrolled {players.length}</p>
                 <p className="started">{started?'Game Started':'Waiting to Start'}</p>
             </div>
