@@ -39,6 +39,12 @@ export default class AuthService{
           }
         return error;
     }
+    static async userStatusObserver(id,callback){
+        let starCountRef = firebase.database().ref('status/' + id + '/state');
+        starCountRef.on('value', function(snapshot) {
+            callback(snapshot.val());
+        });
+    }
     static async registerUserStatus(){
         // Fetch the current user's ID from Firebase Authentication.
         const uid = firebase.auth().currentUser.uid;

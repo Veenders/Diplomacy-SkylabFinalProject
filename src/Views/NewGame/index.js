@@ -37,13 +37,13 @@ class NewGame extends Component {
         if(!user){
             return <LoginView />
         }
-        if(started){
-            return <NotAuthorized>Game Started, You aren't allowed to modify</NotAuthorized>
-        }
         if(user && user.rol===5){
             return (
                 <GameForm idgame={this.props.match.params.idgame} user={user} goBack={this.props.history.goBack}/>
             );
+        }
+        if(started){
+            return <NotAuthorized>Game Started, You aren't allowed to modify</NotAuthorized>
         }
         if(userid!=='' && userid!==user.id){
             return <NotAuthorized>You don't create this game, You aren't allowed to modify</NotAuthorized>

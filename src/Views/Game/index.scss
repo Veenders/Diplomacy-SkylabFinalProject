@@ -34,10 +34,13 @@
     flex-direction: column;
     justify-content: stretch;
     align-items: center;
+    overflow: hidden;
     .Board{
         display: flex;
         flex-direction: column;
         justify-content: center;
+        align-items: center;
+        width: 100%;
         .Map{
             background-color:#DDDDDD;
             width: 837px;
@@ -71,14 +74,17 @@
             flex-direction: row;
             justify-content: space-around;
         }
-        .Complements{
-            flex-grow: 1;
+        .Orders{
+            margin-top: 0;
         }
     }
     .Complements{
-        .Messenger{
+        align-self: stretch;
+        flex-grow: 1;
+        .Messenger, .Orders{
             background-color: white;
             margin: 0 1em;
+            margin-top: 1em;
             border-radius: 10px;
             box-shadow: 0px 3px 8px 0px rgba(0,0,0,0.6);
             padding: 0.5em 1em;
@@ -100,6 +106,12 @@
                     color: $contrastColor;
                     flex-grow: 1;
                     padding: 0.5em 0;
+                    .online{
+                        color: #90ee90;
+                    }
+                    .offline{
+                        color: #f08080;
+                    }
                 }
                 .activeTab{
                     border: 1px solid $primaryColor;

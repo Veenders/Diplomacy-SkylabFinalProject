@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import DBService from '../../../Services/DBService';
+import AuthService from '../../../Services/AuthService';
 
 class Messenger extends Component {
     constructor(props){
@@ -14,13 +15,20 @@ class Messenger extends Component {
             message: '',
             filter: 0,
             online: false,
+            playersStatus:{}
         }
     }
     async componentDidMount(){
-        const {idgame} = this.props
+        const {idgame, players} = this.props
         DBService.getRealtimeDocument('messages','diplomacy_id', idgame ,(messages) => {
             messages!==null && this.setState({messages});
         });
+        players.forEach(player => AuthService.userStatusObserver(player.id,(status)=>{
+            const {playersStatus} = this.state
+            const prplayer=player.id
+            playersStatus[prplayer]=status;
+            this.setState({playersStatus});
+        }))
     }
     setFilter = (filter) => {
         this.setState({filter,to:filter});
@@ -47,15 +55,16 @@ class Messenger extends Component {
         const success = DBService.setDocumentWithId('messages', messages, idgame);
         success && this.setState({message:''});
     }
+
     render() {
-        const {messages,message,to, filter,online} = this.state;
+        const { messages, message, to, filter, online, playersStatus} = this.state;
         const {players,from} = this.props;
         return (
             <div className="Messenger">
                 <h3>Messages</h3>{online&&<p>user online</p>}
                 <div className="HeaderMessage">
                     <button onClick={()=>this.setFilter(0)} className={filter===0?'activeTab':''}>All Players</button>
-                    {players.filter(player=>player.id!==from).map(player=><button onClick={()=>this.setFilter(player.id)} key={player.id} className={filter===player.id?'activeTab':''}>{player.name}</button>)}
+                    {players.filter(player=>player.id!==from).map(player=><button onClick={()=>this.setFilter(player.id)} key={player.id} className={filter===player.id?'activeTab':''}><i className={`fas fa-circle ${playersStatus[player.id]?playersStatus[player.id]:'offline'}`}></i> {player.name}</button>)}
                 </div>
                 <div className="MessageView">
                     {messages.chat.length>0 ?

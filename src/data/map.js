@@ -6,6 +6,7 @@ export default {
         y:50,
         kind: 'sea',
         coast: false,
+        sc: false,
         neighbors: ['NAO','Cly','Edi','NTH','Nwy','BAR']
     },
     NTH:{
@@ -15,6 +16,7 @@ export default {
         y: 220,
         kind: 'sea',
         coast: false,
+        sc: false,
         neighbors: ['NWG','Edi','Yor','Lon','Bel','Hol','HEL','Den','SKA','Nwy']
     },
     ADR:{
@@ -24,6 +26,7 @@ export default {
         y: 450,
         kind: 'sea',
         coast: false,
+        sc: false,
         neighbors: ['ION','Apu','Ven','Tri','Alb']
     },
     AEG:{
@@ -33,6 +36,7 @@ export default {
         y: 505,
         kind: 'sea',
         coast: false,
+        sc: false,
         neighbors: ['ION','Gre','Bul','Con','Smy','EAS']
     },
     Alb:{
@@ -42,6 +46,7 @@ export default {
         y: 470,
         kind: 'land',
         coast: true,
+        sc: false,
         neighbors: ['ION','ADR','Tri','Ser','Gre']
     },
     Ank:{
@@ -51,6 +56,7 @@ export default {
         y: 450,
         kind: 'land',
         coast: true,
+        sc: true,
         neighbors: ['BLA','Arm','Smy','Con']
     },
     Apu:{
@@ -60,6 +66,7 @@ export default {
         y: 455,
         kind: 'land',
         coast: true,
+        sc: false,
         neighbors: ['ION','ADR','Ven','Rom','Nap']
     },
     Arm:{
@@ -69,6 +76,7 @@ export default {
         y: 445,
         kind: 'land',
         coast: true,
+        sc: false,
         neighbors: ['BLA','Ank','Smy','Syr','Sev']
     },
     BAL:{
@@ -78,6 +86,7 @@ export default {
         y: 250,
         kind: 'sea',
         coast: false,
+        sc: false,
         neighbors: ['BOT','Lvn','Pru','Ber','Kie','Den','Swe']
     },
     BAR:{
@@ -87,6 +96,7 @@ export default {
         y: 30,
         kind: 'sea',
         coast: false,
+        sc: false,
         neighbors: ['NWG','Nwy','Stp']
     },
     Bel:{
@@ -96,6 +106,7 @@ export default {
         y: 305,
         kind: 'land',
         coast: true,
+        sc: true,
         neighbors: ['NTH','ENG','Pic','Bur','Ruh','Hol']
     },
     Ber:{
@@ -105,6 +116,7 @@ export default {
         y: 270,
         kind: 'land',
         coast: true,
+        sc: true,
         neighbors: ['BAL','Kie','Mun','Sil','Pru']
     },
     BLA:{
@@ -114,6 +126,7 @@ export default {
         y: 425,
         kind: 'sea',
         coast: false,
+        sc: false,
         neighbors: ['Con','Bul','Rum','Sev','Arm','Ank']
     },
     Boh:{
@@ -123,6 +136,7 @@ export default {
         y: 325,
         kind: 'land',
         coast: false,
+        sc: false,
         neighbors: ['Mun','Tyr','Vie','Gal','Sil']
     },
     Bre:{
@@ -132,6 +146,7 @@ export default {
         y: 325,
         kind: 'land',
         coast: true,
+        sc: true,
         neighbors: ['MAO','ENG','Pic','Par','Gas']
     },
     Bud:{
@@ -141,6 +156,7 @@ export default {
         y: 370,
         kind: 'land',
         coast: false,
+        sc: true,
         neighbors: ['Tri','Vie','Gal','Rum','Ser']
     },
     Bul:{
@@ -150,6 +166,7 @@ export default {
         y: 450,
         kind: 'land',
         coast: true,
+        sc: true,
         neighbors: ['AEG','Gre','Ser','Rum','BLA','Con']
     },
     Bur:{
@@ -159,6 +176,7 @@ export default {
         y: 350,
         kind: 'land',
         coast: false,
+        sc: false,
         neighbors: ['Par','Pic','Bel','Ruj','Mun','Mar','Gas']
     },
     Clyde:{
@@ -168,6 +186,7 @@ export default {
         y: 180,
         kind: 'land',
         coast: true,
+        sc: false,
         neighbors: ['NAO','NWG','Edi','Lvp']
     },
     Con:{
@@ -177,6 +196,7 @@ export default {
         y: 465,
         kind: 'land',
         coast: true,
+        sc: true,
         neighbors: ['AEG','Bul','BLA','Ank','Smy']
     },
     Den:{
@@ -186,6 +206,7 @@ export default {
         y: 240,
         kind: 'land',
         coast: true,
+        sc: true,
         neighbors: ['HEL','NTH','SKA','Swe','BAL','Kie']
     },
     EAS:{
@@ -195,6 +216,7 @@ export default {
         y: 555,
         kind: 'sea',
         coast: false,
+        sc: false,
         neighbors: ['ION','AEG','Smy','Syr']
     },
     Edi:{
@@ -204,6 +226,7 @@ export default {
         y: 200,
         kind: 'land',
         coast: true,
+        sc: true,
         neighbors: ['NWG','NTH','Yor','Lvp','Cly']
     },
     ENG:{
@@ -213,6 +236,7 @@ export default {
         y: 305,
         kind: 'sea',
         coast: false,
+        sc: false,
         neighbors: ['MAO','IRI','Wal','Lon','NTH','Bel','Pic','Bre']
     },
     Fin:{
@@ -222,6 +246,7 @@ export default {
         y: 135,
         kind: 'land',
         coast: true,
+        sc: false,
         neighbors: ['BOT','Swe','Nwy','Stp']
     },
     Gal:{
@@ -231,6 +256,7 @@ export default {
         y: 340,
         kind: 'land',
         coast: false,
+        sc: false,
         neighbors: ['NWG','NTH','Yor','Lvp','Cly']
     },
     Gas:{
@@ -240,6 +266,7 @@ export default {
         y: 380,
         kind: 'land',
         coast: true,
+        sc: false,
         neighbors: ['MAO', 'Bre', 'Par', 'Bur', 'Mar', 'Spa']
     },
     Gre:{
@@ -249,6 +276,7 @@ export default {
         y: 500,
         kind: 'land',
         coast: true,
+        sc: true,
         neighbors: ['AEG', 'ION', 'Alb', 'Ser', 'Bul']
     },
     LYO:{
@@ -258,6 +286,7 @@ export default {
         y: 440,
         kind: 'sea',
         coast: false,
+        sc: false,
         neighbors: ['TYS', 'WES', 'Spa', 'Mar', 'Pie', 'Tus']
     },
     BOT:{
@@ -267,6 +296,7 @@ export default {
         y: 195,
         kind: 'sea',
         coast: false,
+        sc: false,
         neighbors: ['BAL', 'Swe', 'Fin', 'Stp', 'Lvn']
     },
     HEL:{
@@ -276,6 +306,7 @@ export default {
         y: 250,
         kind: 'sea',
         coast: false,
+        sc: false,
         neighbors: ['NTH', 'Den', 'Kie', 'Hol']
     },
     Hol:{
@@ -285,6 +316,7 @@ export default {
         y: 290,
         kind: 'land',
         coast: true,
+        sc: true,
         neighbors: ['NTH', 'HEL', 'Kie', 'Ruh', 'Bel']
     },
     ION:{
@@ -294,6 +326,7 @@ export default {
         y: 540,
         kind: 'sea',
         coast: false,
+        sc: false,
         neighbors: ['Tun', 'TYS', 'Nap', 'Apu', 'ADR', 'Alb','Gre','AEG','EAS']
     },
     IRI:{
@@ -303,6 +336,7 @@ export default {
         y: 280,
         kind: 'sea',
         coast: false,
+        sc: false,
         neighbors: ['MAO', 'NAO', 'Lvp', 'Wal', 'Eng']
     },
     Kie:{
@@ -312,6 +346,7 @@ export default {
         y: 290,
         kind: 'land',
         coast: true,
+        sc: true,
         neighbors: ['HEL', 'Den', 'BAL', 'Ber', 'Mun', 'Ruh','Hol']
     },
     Lvp:{
@@ -321,6 +356,7 @@ export default {
         y: 235,
         kind: 'land',
         coast: true,
+        sc: true,
         neighbors: ['IRI', 'NAO', 'Cly', 'Edi', 'Yor', 'Wal']
     },
     Lvn:{
@@ -330,6 +366,7 @@ export default {
         y: 240,
         kind: 'land',
         coast: true,
+        sc: false,
         neighbors: ['BAL', 'BOT', 'Stp', 'Mos', 'War', 'Pru']
     },
     Lon:{
@@ -339,6 +376,7 @@ export default {
         y: 280,
         kind: 'land',
         coast: true,
+        sc: true,
         neighbors: ['NTH', 'ENG', 'Wal', 'Yor']
     },
     Mar:{
@@ -348,6 +386,7 @@ export default {
         y: 395,
         kind: 'land',
         coast: true,
+        sc: true,
         neighbors: ['LYO', 'Spa', 'Gas', 'Bur', 'Pie']
     },
     MAO:{
@@ -357,6 +396,7 @@ export default {
         y: 340,
         kind: 'sea',
         coast: false,
+        sc: false,
         neighbors: ['WES', 'Spa', 'Por', 'NAO', 'IRI', 'ENG', 'Bre', 'Gas']
     },
     Mos:{
@@ -366,6 +406,7 @@ export default {
         y: 240,
         kind: 'land',
         coast: false,
+        sc: true,
         neighbors: ['Sev', 'Ukr', 'War', 'Lvn', 'Stp']
     },
     Mun:{
@@ -375,6 +416,7 @@ export default {
         y: 340,
         kind: 'land',
         coast: false,
+        sc: true,
         neighbors: ['Bur', 'Ruh', 'Kie', 'Ber', 'Sil', 'Boh','Tyr']
     },
     Nap:{
@@ -384,6 +426,7 @@ export default {
         y: 500,
         kind: 'land',
         coast: true,
+        sc: true,
         neighbors: ['ION', 'TYS', 'Rom', 'Apu']
     },
     NAO:{
@@ -393,6 +436,7 @@ export default {
         y: 100,
         kind: 'sea',
         coast: false,
+        sc: false,
         neighbors: ['MAO', 'IRI', 'Lvp', 'Cly', 'NWG']
     },
     Naf:{
@@ -402,6 +446,7 @@ export default {
         y: 540,
         kind: 'land',
         coast: true,
+        sc: false,
         neighbors: ['MAO', 'WES', 'Tun']
     },
     Nwy:{
@@ -411,6 +456,7 @@ export default {
         y: 150,
         kind: 'land',
         coast: true,
+        sc: true,
         neighbors: ['SKA', 'NTH', 'NWG', 'Stp', 'Fin', 'Swe']
     },
     Par:{
@@ -420,6 +466,7 @@ export default {
         y: 340,
         kind: 'land',
         coast: false,
+        sc: true,
         neighbors: ['Gas', 'Bre', 'Pic', 'Bur']
     },
     Pic:{
@@ -429,6 +476,7 @@ export default {
         y: 315,
         kind: 'land',
         coast: true,
+        sc: false,
         neighbors: ['ENG', 'Bel', 'Bur', 'Par','Bre']
     },
     Pie:{
@@ -438,6 +486,7 @@ export default {
         y: 390,
         kind: 'land',
         coast: true,
+        sc: false,
         neighbors: ['LYO', 'Mar', 'Tyr', 'Ven','Tus']
     },
     Por:{
@@ -447,6 +496,7 @@ export default {
         y: 420,
         kind: 'land',
         coast: true,
+        sc: true,
         neighbors: ['MAO', 'Spa']
     },
     Pru:{
@@ -456,6 +506,7 @@ export default {
         y: 275,
         kind: 'land',
         coast: true,
+        sc: false,
         neighbors: ['BAL', 'Lvn', 'War', 'Sil', 'Ber']
     },
     Rom:{
@@ -465,6 +516,7 @@ export default {
         y: 457,
         kind: 'land',
         coast: true,
+        sc: true,
         neighbors: ['TYS', 'Tus', 'Ven','Apu', 'Nap']
     },
     Ruh:{
@@ -474,6 +526,7 @@ export default {
         y: 310,
         kind: 'land',
         coast: false,
+        sc: false,
         neighbors: ['Bur', 'Bel', 'Hol', 'Kie','Mun']
     },
     Rum:{
@@ -483,6 +536,7 @@ export default {
         y: 395,
         kind: 'land',
         coast: true,
+        sc: true,
         neighbors: ['BLA', 'Bul', 'Ser', 'Bud', 'Gal', 'Ukr', 'Sev']
     },
     Ser:{
@@ -492,6 +546,7 @@ export default {
         y: 430,
         kind: 'land',
         coast: false,
+        sc: true,
         neighbors: ['Alb', 'Tri', 'Bud', 'Rum','Bul','Gre']
     },
     Sev:{
@@ -501,6 +556,7 @@ export default {
         y: 330,
         kind: 'land',
         coast: true,
+        sc: true,
         neighbors: ['BLA', 'Rum', 'Ukr', 'Mos','Arm']
     },
     Sil:{
@@ -510,6 +566,7 @@ export default {
         y: 305,
         kind: 'land',
         coast: false,
+        sc: false,
         neighbors: ['Boh', 'Mun', 'Ber', 'Pru', 'War', 'Gal']
     },
     SKA:{
@@ -519,6 +576,7 @@ export default {
         y: 210,
         kind: 'sea',
         coast: false,
+        sc: false,
         neighbors: ['NTH', 'Nwy', 'Swe', 'BAL', 'Den']
     },
     Smy:{
@@ -528,6 +586,7 @@ export default {
         y: 510,
         kind: 'land',
         coast: true,
+        sc: true,
         neighbors: ['EAS', 'AEG', 'Con', 'Ank', 'Arm', 'Syr']
     },
     Spa:{
@@ -537,6 +596,7 @@ export default {
         y: 445,
         kind: 'land',
         coast: true,
+        sc: true,
         neighbors: ['LYO', 'WES', 'MAO', 'Por', 'Gas', 'Mar']
     },
     Stp:{
@@ -555,6 +615,7 @@ export default {
         y: 145,
         kind: 'land',
         coast: true,
+        sc: true,
         neighbors: ['BOT', 'BAL', 'Den', 'SKA' ,'Nwy', 'Fin']
     },
     Syr:{
@@ -564,6 +625,7 @@ export default {
         y: 510,
         kind: 'land',
         coast: true,
+        sc: false,
         neighbors: ['EAS', 'Smy', 'Arm']
     },
     Tri:{
@@ -573,6 +635,7 @@ export default {
         y: 405,
         kind: 'land',
         coast: true,
+        sc: true,
         neighbors: ['ADR', 'Ven', 'Tyr', 'Vie','Bud', 'Ser', 'Alb']
     },
     Tun:{
@@ -582,6 +645,7 @@ export default {
         y: 540,
         kind: 'land',
         coast: true,
+        sc: true,
         neighbors: ['ION', 'TYS', 'WES', 'Naf']
     },
     Tus:{
@@ -591,6 +655,7 @@ export default {
         y: 430,
         kind: 'land',
         coast: true,
+        sc: false,
         neighbors: [ 'TYS', 'LYO', 'Pie', 'Ven', 'Rom']
     },
     Tyr:{
@@ -600,6 +665,7 @@ export default {
         y: 370,
         kind: 'land',
         coast: false,
+        sc: false,
         neighbors: ['Mun', 'Boh', 'Vie', 'Tri', 'Ven', 'Pie']
     },
     TYS:{
@@ -609,6 +675,7 @@ export default {
         y: 490,
         kind: 'sea',
         coast: false,
+        sc: false,
         neighbors: ['ION', 'Tun', 'WES', 'LYO', 'Tus', 'Rom', 'Nap']
     },
     Ukr:{
@@ -618,6 +685,7 @@ export default {
         y: 320,
         kind: 'land',
         coast: false,
+        sc: false,
         neighbors: ['Gal', 'War', 'Mos', 'Sev', 'Rum']
     },
     Ven:{
@@ -627,6 +695,7 @@ export default {
         y: 410,
         kind: 'land',
         coast: true,
+        sc: true,
         neighbors: ['ADR', 'Apu', 'Rom', 'Tus', 'Pie', 'Tyr', 'Tri']
     },
     Vie:{
@@ -636,6 +705,7 @@ export default {
         y: 355,
         kind: 'land',
         coast: false,
+        sc: true,
         neighbors: ['Tri', 'Boh', 'Gal', 'Rum', 'Ser']
     },
     Wal:{
@@ -645,6 +715,7 @@ export default {
         y: 280,
         kind: 'land',
         coast: true,
+        sc: false,
         neighbors: ['ENG', 'IRI', 'Lvp', 'Yor', 'Lon']
     },
     War:{
@@ -654,6 +725,7 @@ export default {
         y: 310,
         kind: 'land',
         coast: false,
+        sc: true,
         neighbors: ['Sil', 'Pru', 'Lvn', 'Mos', 'Ukr', 'Gal']
     },
     WES:{
@@ -663,6 +735,7 @@ export default {
         y: 500,
         kind: 'sea',
         coast: false,
+        sc: false,
         neighbors: ['LYO', 'TYS', 'Tun', 'Naf', 'MAO', 'Spa']
     },
     Yor:{
@@ -672,6 +745,7 @@ export default {
         y: 255,
         kind: 'land',
         coast: true,
+        sc: false,
         neighbors: ['NTH', 'Lon', 'Wal', 'Lvp', 'Edi']
     },
 }

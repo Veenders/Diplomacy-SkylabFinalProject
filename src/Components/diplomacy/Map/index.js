@@ -1,8 +1,8 @@
+/* eslint-disable array-callback-return */
 import React, { Component } from 'react';
 import { SvgLoader, SvgProxy } from 'react-svgmt';
 import MapSVG from './../../../img/DiplomacyMap.svg';
-import army from './../../../img/army.svg';
-import fleet from './../../../img/fleet.svg'
+import Armies from './armies';
 import datamap from './../../../data/map';
 import countries from './../../../data/country';
 
@@ -23,7 +23,7 @@ class Map extends Component {
     }
     setScale = () => {
         const prWidth = window.innerWidth;
-        if(prWidth > 1330){
+        if(prWidth > _MAPWIDTH){
             this.setState({scale:1});
         }else{
             this.setState({scale:prWidth/_MAPWIDTH})
@@ -31,34 +31,37 @@ class Map extends Component {
 
     }
     loadArmy = () => {
-        var armys = []
-        for(const mapid in datamap){
-            const country = datamap[mapid];
-            if(country.kind==='land'){
-                armys.push(<SvgLoader key={'army'+country.id} ref="army" className="army" id={'army'+country.id} path={army} onClick={()=>this.ArmyDroped('army'+country.id)}  style={{top:`${country.y}pt`,left:`${country.x}pt`}}/>)
-            }
-            else{
-                armys.push(<SvgLoader key={'fleet'+country.id} ref="fleet" className="fleet" id={'fleet'+country.id} path={fleet} onClick={()=>this.ArmyDroped('fleet'+country.id)} style={{top:`${country.y}pt`,left:`${country.x}pt`}}/>)
-            }
-        }
+        let armys = []
+        const {turn} = this.props;
+        turn.userturn.map(usturn=>{
+            usturn.armies.map(army=>armys.push(<Armies father={this} key={army.id} id={army.id} color={countries[army.country].armycol} type={army.type} x={datamap[army.territory].x} y={datamap[army.territory].y} armyDroped={this.ArmyDroped}/> ))
+        })
         return armys;
+    }
+    drawTerritory = () => {
+        let territories = []
+        const {turn} = this.props;
+        turn.userturn.map(usturn=>{
+            usturn.territories.map(territory => territories.push(<SvgProxy key={territory} selector={'#'+territory} fill={countries[usturn.country].countrycol} stroke="black" />))
+            
+        })
+        return territories;
     }
     TerritoryClicked = (event) =>{
         console.log(event.target.id);
     }
-    ArmyDroped = (army) =>{
-        console.log(army);
-    }
     componentWillUnmount(){
         window.removeEventListener("resize",this.setScale);
     }
+
     render() {
         return (
-            <div className="Map" style={{transform:`scale(${this.state.scale})`}}>
-                <SvgLoader id="map" ref="map" path={MapSVG} onClick={this.TerritoryClicked} width={_MAPWIDTH} height={_MAPHEIGHT}>
+            <div id="main-map" className="Map" style={{transform:`scale(${this.state.scale})`}}>
+                <SvgLoader id="map" ref="map" path={MapSVG} width={_MAPWIDTH} height={_MAPHEIGHT}>
                     <SvgProxy selector=".l" fill="#FFFFDD" stroke="black" />
                     <SvgProxy selector=".w" fill="#99CCFF" stroke="black" />
                     <SvgProxy selector=".s" fill="#DDDDDD" stroke="black" />
+                    {this.drawTerritory()}
                 </SvgLoader>
                 {this.loadArmy()}
             </div>
