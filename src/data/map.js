@@ -179,7 +179,7 @@ export default {
         sc: false,
         neighbors: ['Par','Pic','Bel','Ruj','Mun','Mar','Gas']
     },
-    Clyde:{
+    Cly:{
         name: 'Clyde',
         id: 'Cly',
         x: 135,
@@ -257,7 +257,7 @@ export default {
         kind: 'land',
         coast: false,
         sc: false,
-        neighbors: ['NWG','NTH','Yor','Lvp','Cly']
+        neighbors: ['Boh','Sil','War','Ukr','Rum','Bud','Vie']
     },
     Gas:{
         name: 'Gascony',
@@ -706,7 +706,7 @@ export default {
         kind: 'land',
         coast: false,
         sc: true,
-        neighbors: ['Tri', 'Boh', 'Gal', 'Rum', 'Ser']
+        neighbors: ['Tri', 'Tyr', 'Boh', 'Gal', 'Bud']
     },
     Wal:{
         name: 'Wales',
