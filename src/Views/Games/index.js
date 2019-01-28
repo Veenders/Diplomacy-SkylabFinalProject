@@ -42,7 +42,7 @@ class Games extends Component {
             })
             games = games.filter(game => mygames.map(el => el.id).indexOf(game.id)===-1 && game.open === true);
         }else{
-            games = games.filter(game => game.open === true);
+            games = games.filter(game => game.open === true && game.started===false);
         }
         //const mygames = await DBService.getFilteredContent('diplomacy', 'user' , user.id);
         this.setState({mygames,games});

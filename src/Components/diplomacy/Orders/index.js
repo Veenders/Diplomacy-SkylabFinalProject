@@ -8,42 +8,68 @@ class Orders extends Component {
 
         this.state = {
             orders:[],
+            error: ''
         }
+    }
+    componentDidMount(){
+        const {turn, player}=this.props
+        const [playerturn] = turn.userturn.filter(userturn => userturn.player===player)
+        playerturn.orders && this.setState({orders: playerturn.orders})
+    }
+    saveOrders = (event) =>{
+        event.preventDefault();
+        const {orders} = this.state;
+        const {turn, player, saveOrders} = this.props;
+        const [playerturn] = turn.userturn.filter(userturn => userturn.player===player)
+        let error = '';
+        orders.forEach(order => {
+            if(order.order==='move'){
+                error = order.destination?'Some armies don\'t define his destination':error;
+            }
+        })
+        error = playerturn.armies.length===orders.length? 'You need to define some orders':error;
+        error && saveOrders(orders);
+        //this.setState(error)
+    }
+    setOrders = (id,value,option) =>{
+        const {orders} = this.state;
+        const ids = orders.map(order => order.id);
+        const index = ids.indexOf(id);
+        let order = {}
+        if(index !==-1){
+            [order] = orders.splice(index,1);
+            order[option] = value;
+        } else{
+            order = {id:id};
+            order[option] = value;
+        }
+        orders.push(order);
+        this.setState({orders})
     }
     setField = (event) =>{
-        const {orders} = this.state;
-        const ids = orders.map(order => order.id);
-        const index = ids.indexOf(event.name);
-        let order = {}
-        if(index !==-1){
-            [order] = orders.splice(index,1);
-            order.order = event.value;
-        } else{
-            order = {id:event.name,order:event.value}
-        }
-        orders.push(order);
-        this.setState({orders})
+        this.setOrders(event.name,event.value,'order')
     }
     setTerritory = (event) =>{
-        const {orders} = this.state;
-        const ids = orders.map(order => order.id);
-        const index = ids.indexOf(event.name);
-        let order = {}
-        if(index !==-1){
-            [order] = orders.splice(index,1);
-            order.destination = event.value;
-        } else{
-            order = {id:event.name,destination:event.value}
-        }
-        orders.push(order);
-        this.setState({orders})
+        this.setOrders(event.name.slice(0,-2),event.value,'destination')
+    }
+    setOrigin = (event) =>{
+        this.setOrders(event.name.slice(0,-2),event.value,'origin')
     }
     getSelectedOptions = (order,army) =>{
+        const {turn} = this.props
+        const deployedArmies = {};
+        turn.userturn.forEach(usturn => usturn.armies.forEach(prarmy => {
+            if(prarmy.id!==army.id){
+                deployedArmies[prarmy.territory]=prarmy.country;
+            }
+        }))
+        const territoryWithArmies = Object.keys(deployedArmies);
         if(order){
             switch(order.order){
                 case 'move':
                     return (<React.Fragment>
-                                to: <select name={army.id} id={army.id} value={order.destination} onChange={(event)=>this.setTerritory(event.target)}>
+                                to: <select name={army.id+'mv'} id={army.id+'mv'} value={order.destination} onChange={(event)=>this.setTerritory(event.target)}>
+                                    <option value="">Not Defined</option>
                                     {datamap[army.territory].neighbors
                                         .filter(neigh=>datamap[neigh].coast || (army.type==="fleet" &&  datamap[neigh].kind==='sea')|| (army.type==="army" &&  datamap[neigh].kind==='land'))
                                         .map(neigh => <option key={neigh} value={neigh}>{datamap[neigh].name}</option>)}
@@ -51,40 +77,70 @@ class Orders extends Component {
                        </React.Fragment> 
                     )
                 case 'support':
-                    return ' doing suport';
+                    return (<React.Fragment>
+                            to: 
+                            <select name={army.id+'sp'} id={army.id+'sp'} value={order.destination} onChange={(event)=>this.setTerritory(event.target)}>
+                                <option value="">Not Defined</option>
+                                {datamap[army.territory].neighbors
+                                    .filter(neigh=>datamap[neigh].coast || (army.type==="fleet" &&  datamap[neigh].kind==='sea')|| (army.type==="army" &&  datamap[neigh].kind==='land'))
+                                    .map(neigh => <option key={neigh} value={neigh}>{datamap[neigh].name}</option>)}
+                            </select>
+                            from: 
+                            {
+                                order.destination?<select name={army.id+'or'} id={army.id+'or'} value={order.origin} onChange={(event)=>this.setOrigin(event.target)}>
+                                    <option value="">Not Defined</option>
+                                    {datamap[order.destination].neighbors
+                                        .filter(neigh=>territoryWithArmies.includes(neigh))
+                                        .map(neigh => <option key={neigh} value={neigh}>{deployedArmies[neigh]!==army.country?deployedArmies[neigh]+' - ':''}{datamap[neigh].name}
+                                        </option>)}
+                                </select>:'Select Suport Destination'
+
+                            }
+                        </React.Fragment> 
+                    )
                 case 'transport':
                     return ' doing transport'
                 default:
                         return <React.Fragment> in {datamap[army.territory].name}</React.Fragment>
             }
         }else{
-            return <React.Fragment> in {datamap[army.territory].name}</React.Fragment>
+            return ''
         }
     }
+    isAllPlayerFinish = () =>{
+        const {turn} = this.props;
+        const FinishedPlayers = turn.userturn.filter(userturn => userturn.finishedOrders)
+        return FinishedPlayers.length === turn.userturn.length
+    }
+    capitalize = (string) => string.charAt(0).toUpperCase() + string.slice(1)
     render() {
-        const {orders} = this.state;
-        const {turn, player}=this.props
+        const {orders, error} = this.state;
+        const {turn, player, processTurn}=this.props
         const [playerturn] = turn.userturn.filter(userturn => userturn.player===player)
         return (
             <div className='Orders'>
                 <div className='OrdersHeader'>
                     <h3>Orders</h3>
                 </div>
-                <div className='OrdersBody'>
+                <form className='OrdersBody' onSubmit={this.saveOrders}>
                     {playerturn.armies.map(army => {
                         const [order] = orders?orders.filter(prorder=> prorder.id===army.id):{};
-                        return (<div key={army.id}>
-                                {army.type} on {datamap[army.territory].name}: 
-                                <select name={army.id} id={army.id} value={order?order.order:'hold'} onChange={(event)=>this.setField(event.target)}>
+                        return (<div className="orderItem" key={army.id}>
+                                {this.capitalize(army.type)} on {datamap[army.territory].name}: 
+                                <select name={army.id} id={army.id} value={order?order.order:''} onChange={(event)=>this.setField(event.target)}>
+                                    <option value="">Select one Order</option>
                                     <option value="hold">Hold</option>
                                     <option value="move">Move</option>
                                     <option value="support">Support</option>
-                                    {army.type==='fleet'&&<option value="transport">transport</option>}
+                                    {army.type==='fleet' && datamap[army.territory].kind==='sea' && <option value="transport">transport</option>}
                                 </select>
                                 {this.getSelectedOptions(order,army)}
                             </div>)
                     })}
-                </div>
+                    {error && <p className="error">{error}</p>}
+                    <button type="Submit">Save Orders</button>
+                    {this.isAllPlayerFinish() && <button type="button" onClick={processTurn}>Process Turn</button>}
+                </form>
             </div>
         );
     }

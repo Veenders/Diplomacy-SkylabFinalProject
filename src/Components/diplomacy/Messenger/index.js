@@ -63,7 +63,7 @@ class Messenger extends Component {
             <div className="Messenger">
                 <h3>Messages</h3>{online&&<p>user online</p>}
                 <div className="HeaderMessage">
-                    <button onClick={()=>this.setFilter(0)} className={filter===0?'activeTab':''}>All Players</button>
+                <button onClick={()=>this.setFilter(0)} className={filter===0?'activeTab':''}>All Players</button>
                     {players.filter(player=>player.id!==from).map(player=><button onClick={()=>this.setFilter(player.id)} key={player.id} className={filter===player.id?'activeTab':''}><i className={`fas fa-circle ${playersStatus[player.id]?playersStatus[player.id]:'offline'}`}></i> {player.name}</button>)}
                 </div>
                 <div className="MessageView">

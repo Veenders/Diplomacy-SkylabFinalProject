@@ -19,7 +19,7 @@ const GameItem = (props) => {
                 <p className="started">{started?'Game Started':'Waiting to Start'}</p>
             </div>
             <div className="cardFooter">
-                <Link to={`/games/${id}`}>More info</Link>
+                <Link to={`/games/${id}`}>{started?'Play':'More info'}</Link>
                 {userid && (user===userid.id || userid.rol === 5) && <Link to={`/games/${id}/edit`}>Edit Game</Link>}
                 {userid && players.length<7 && players.filter(player => player.id === userid.id).length===0 && <button onClick={()=>addPlayer(props.game)}>Enroll Me</button>}
             </div>

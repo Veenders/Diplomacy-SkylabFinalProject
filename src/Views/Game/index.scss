@@ -143,7 +143,7 @@
                     padding: 0.3em 1em;
                 }
             }
-            form{
+            #MessengerForm{
                 display: flex;
                 flex-direction: column;
                 justify-content: stretch;
@@ -187,6 +187,41 @@
                         }
 
                     }
+                }
+            }
+            .OrdersBody{
+                display: flex;
+                flex-direction: column;
+                justify-content: stretch;
+                align-items: stretch;
+                .orderItem{
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-top: 0.5em;
+                    select{
+                        margin: 0 0.5em;
+                        flex-grow: 1;
+                        padding: 0.5em;
+                        border-radius: 5px;
+                    }
+                }
+                button{
+                    margin-top: 0.5em;
+                    padding: 0.5em 1em;
+                    border-radius: 10px;
+                    border: 1px solid $primaryColor;
+                    background-color: $contrastColor;
+                    color: $primaryColor;
+                    font-size: 1.1em;
+                    outline: none;
+                    text-decoration: none;
+                    &:hover{
+                        background-color: $thirdColor;
+                        box-shadow: 0px 3px 8px 0px rgba(0,0,0,0.6);
+                    }
+
                 }
             }
         }

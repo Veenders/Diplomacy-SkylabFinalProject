@@ -58,7 +58,7 @@ class Game extends Component {
         return (
             <main>
                 <div className="Logo"><img src={logo} alt="Atomic Diplomacy"/></div>
-                {loading?<Loading />:game.started?<Diplomacy game={game} />:<GameDetail game={game} addPlayer={this.addPlayer} userid={user?user.id:''}/>}
+                {loading?<Loading />:game.started?<Diplomacy />:<GameDetail game={game} addPlayer={this.addPlayer} userid={user?user.id:''}/>}
                 {showModal && <ModalComponent title="Insert the Enroll Code" close={()=>this.setState({showModal:false,errorcode: ''})}><VerifyCode verify={this.verifyCode} error={errorcode}/></ModalComponent>}
             </main>
         );
