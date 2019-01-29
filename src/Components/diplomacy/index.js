@@ -39,39 +39,81 @@ class Diplomacy extends Component {
         const result = await DBService.setDocumentWithId('diplomacy', game, game.id);
         result && this.setState({game,turn,loading:false});
     }
+    solveOrder = (order) =>{
+        const {game, turn} = this.state
+        const prturn = game.turns[turn]
+        const indexuserturn = prturn.userturn.findIndex(userturn => userturn.country === order.country);
+        const indexarmy = prturn.userturn[indexuserturn].armies.findIndex(army => army.id === order.id);
+        prturn.userturn[indexuserturn].armies[indexarmy].territory = order.destination;
+    }
+    solveCombat(orders, order, samedestination){
+        let result='tie'
+        const combat = [{...order, strength: 1}];
+        samedestination.forEach(element => {
+            const index = orders.findIndex(prorder => prorder.id===element.id)
+            orders.splice(index,1);
+            combat.push({...element, strength: 1})
+        })
+        const presupportorders = orders.filter(prorder=>prorder.destination===order.destination&&prorder.order==='support')
+        if(presupportorders>0){
+            const supportorders = []
+            presupportorders.forEach(support => {
+                let result = '';
+                const samedestin = orders.filter(prorder => prorder.destination===support.origin);
+                samedestin.length===0?supportorders.push(support):[orders,result]=this.solveCombat(orders,support,samedestin)
+                result ==='win' && supportorders.push(support)
+            })
+            supportorders.forEach(support=>{
+                const index = combat.findIndex(combatarmy=>combatarmy.origin===support.support);
+                combat[index].strength++;
+            })
+        }
+        combat.sort(function (combat1,combat2) {
+            if (combat1.strength > combat2.strength) { //comparación lexicogŕafica
+              return 1;
+            } else if (combat1.strength < combat2.strength) {
+              return -1;
+            } 
+            return 0;
+          });
+        console.log(combat)
+        return [orders,result];
+    }
+    solveMovement=(orders,order)=>{
+        let solved = true;
+        const emptydestination = orders.findIndex(prOrder => prOrder.origin === order.destination)
+        if(emptydestination === -1){
+            const samedestination = orders.filter(prorder => prorder.destination===order.destination);
+            samedestination.length===0?this.solveOrder(order):[orders] = this.solveCombat(orders, order, samedestination);
+        }else{
+            const destinationOrder = orders[emptydestination]
+            if(destinationOrder.order==='move'){
+                if(destinationOrder.destination===order.origin){
+                    [orders] = this.solveCombat(orders, order, [destinationOrder]);
+                }else{
+                    let [destinOrder] = orders.splice(emptydestination,1);
+                    [orders, solved]=this.solveMovement(orders,destinationOrder)
+                    solved && this.solveOrder(order);
+                    !solved && orders.push(destinOrder) && ([orders] = this.solveCombat(orders, order, [destinationOrder]));
+                }
+            }else{
+                [orders] = this.solveCombat(orders, order, [destinationOrder]);
+            }
+        }
+        return [orders,solved];
+    }
     processTurn = () =>{
         const {game, turn} = this.state
         const prturn = game.turns[turn]
         let orders = []
         prturn.userturn.map(userturn=>userturn.orders.map(order => orders.push({country: userturn.country, ...order})))
-        let supportorders = orders.filter(order=> order.order === 'support');
-        let combatorders = {}
-        let resolvedorders = []
-        while(orders.length > 0){
-            const order = orders.shift()
-            if(orders.findIndex(prorder=>prorder.destination === order.destination)===-1){
-                const indexuserturn = prturn.userturn.findIndex(userturn => userturn.country === order.country);
-                const indexarmy = prturn.userturn[indexuserturn].armies.findIndex(army => army.id === order.id);
-                prturn.userturn[indexuserturn].armies[indexarmy].territory = order.destination;
-                resolvedorders.push(order);
-            }else{
-                combatorders[order.destination] = [order];
-                const samedestination = orders.filter(prorder => prorder.destination===order.destination);
-                for(let i = 0; i<samedestination.length;i++){
-                    const index = orders.findIndex(prorder => prorder.destination === order.destination);
-                    const combatorder = orders.splice(index,1);
-                    combatorders[order.destination].push(combatorder);
-                }
-            }
+        let moveIndex = orders.findIndex(order=> order.order === 'move');
+        while(moveIndex !== -1){
+            const [order]= orders.splice(moveIndex,1);
+            [orders] = this.solveMovement(orders,order);
+            moveIndex = orders.findIndex(order=> order.order === 'move');
         }
-        for(const territory in combatorders){
-            const suporting = supportorders.filter(order => order.support === territory);
-            if(suporting.length>0){
-
-            }
-        }
-        console.log('Processed Turn',prturn)
-        console.log('Final elements',resolvedorders,combatorders);
+        
     }
     render() {
         const {user} = this.props
@@ -104,3 +146,48 @@ const mapStateToProps = (state) => {
 }
 
 export default withRouter(connect(mapStateToProps)(Diplomacy));
+
+/*
+let preSupportOrders = orders.filter(order=> order.order === 'support');
+        let supportOrders = []
+        let combatorders = {}
+        while(preSupportOrders>0){
+            const order = preSupportOrders.shift()
+            const index = orders.findIndex(prorder => prorder.id === order.id);
+            orders.splice(index,1);
+            if(orders.findIndex(prOrder => prOrder.destination === order.origin && prOrder.order ==='move')){
+                combatorders[order.origin] = [order];
+                const samedestination = orders.filter(prorder => prorder.destination===order.origin)
+                for(let i = 0; i<samedestination.length;i++){
+                    const index = orders.findIndex(prorder => prorder.destination === order.origin);
+                    const combatorder = orders.splice(index,1);
+                    combatorders[order.origin].push(combatorder);
+                }
+            }else{
+                supportOrders.push(order);
+            }
+        }
+        let preresolvedorders = []
+        while(orders.length > 0){
+            const order = orders.shift()
+            if(orders.findIndex(prorder=>prorder.destination === order.destination || (prorder.origin === order.destination && prorder.destination===order.origin))===-1){
+                preresolvedorders.push(order);
+            }else{
+                combatorders[order.destination] = [order];
+                const samedestination = orders.filter(prorder => prorder.destination===order.destination || (prorder.origin === order.destination && prorder.destination===order.origin));
+                for(let i = 0; i<samedestination.length;i++){
+                    const index = orders.findIndex(prorder => prorder.destination === order.destination || (prorder.origin === order.destination && prorder.destination===order.origin));
+                    const combatorder = orders.splice(index,1);
+                    combatorders[order.destination].push(combatorder);
+                }
+            }
+        }
+        for(const territory in combatorders){
+            const suporting = supportOrders.filter(order => order.support === territory);
+            if(suporting.length>0){
+
+            }
+        }
+        console.log('Processed Turn',prturn)
+        console.log('Final elements',preresolvedorders,combatorders);
+*/

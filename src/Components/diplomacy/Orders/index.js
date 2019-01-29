@@ -46,8 +46,9 @@ class Orders extends Component {
         orders.push(order);
         this.setState({orders})
     }
-    setField = (event) =>{
-        this.setOrders(event.name,event.value,'order')
+    setOrder = (event, origin) =>{
+        this.setOrders(event.name,event.value,'order');
+        this.setOrders(event.name,origin,'origin');
     }
     setTerritory = (event) =>{
         this.setOrders(event.name.slice(0,-2),event.value,'destination')
@@ -131,7 +132,7 @@ class Orders extends Component {
                         const [order] = orders?orders.filter(prorder=> prorder.id===army.id):{};
                         return (<div className="orderItem" key={army.id}>
                                 {this.capitalize(army.type)} on {datamap[army.territory].name}: 
-                                <select name={army.id} id={army.id} value={order?order.order:''} onChange={(event)=>this.setField(event.target)}>
+                                <select name={army.id} id={army.id} value={order?order.order:''} onChange={(event)=>this.setOrder(event.target, army.territory)}>
                                     <option value="">Select one Order</option>
                                     <option value="hold">Hold</option>
                                     <option value="move">Move</option>
@@ -143,8 +144,8 @@ class Orders extends Component {
                     })}
                     {error && <p className="error">{error}</p>}
                     <button type="Submit">Save Orders</button>
-                    {this.isAllPlayerFinish() && <button type="button" onClick={processTurn}>Process Turn</button>}
                 </form>
+                {this.isAllPlayerFinish() && <button type="button" onClick={processTurn}>Process Turn</button>}
             </div>
         );
     }
