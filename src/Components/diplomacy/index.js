@@ -3,7 +3,7 @@ import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 
 import DBService from '../../Services/DBService';
-import datamap from './../../../data/map';
+import datamap from './../../data/map';
 
 import Login from '../auth/Login';
 import Map from './Map';
@@ -43,13 +43,32 @@ class Diplomacy extends Component {
         result && this.setState({game,turn,loading:false});
     }
     isTransport=(order)=>{
-        let result=true;
+        let result=false;
         const {game, turn} = this.state
         const prturn = game.turns[turn]
-        const transportorders = [];
-        prturn.turnuser.forEach(turnuser =>{
-            transportorders = turnuser.orders.filter(order => order.type="transport")
+        let transportorders = [];
+        prturn.userturn.forEach(turnuser =>{
+            transportorders.push(...turnuser.orders.filter(ord => ord.order==="transport"))
         })
+        let nextround = true;
+        const startingterritory=order.origin;
+        const territoriesWithTransport = transportorders.filter(trans => datamap[startingterritory].neighbors.includes(trans.origin))
+        if(territoriesWithTransport.length>0){
+            while(nextround){
+                const prevlength = territoriesWithTransport.length;
+                // eslint-disable-next-line no-loop-func
+                territoriesWithTransport.forEach(transport =>{
+                    if(datamap[transport.origin].neighbors.includes(order.destination) && (transport.destination===order.origin && transport.to===order.destination)){
+                        result = true;
+                        nextround = false;
+                        return result;
+                    }else{
+                        territoriesWithTransport.push(...transportorders.filter(trans => datamap[transport].neighbors.includes(trans.origin)))
+                    }
+                })
+                nextround = prevlength !== territoriesWithTransport.length;
+            }
+        }
         return result
     }
     solveOrder = (order) =>{
@@ -71,31 +90,42 @@ class Diplomacy extends Component {
         let retir=[]
         const combat = [{...order, strength: 1},{...crossorder, strength: 1}];
         const presupportorders = orders.filter(prorder=>(prorder.destination===order.destination||prorder.destination===crossorder.destination)&&prorder.order==='support')
-        if(presupportorders>0){
+        if(presupportorders.length>0){
             const supportorders = []
             presupportorders.forEach(support => {
                 let result = '';
-                const samedestin = orders.filter(prorder => prorder.destination===support.origin);
-                samedestin.length===0?supportorders.push(support):[orders,result,retir]=this.solveCombat(orders,support,samedestin)
-                retired.push(retir);
-                result ==='win' && supportorders.push(support)
+                const samedestin = orders.filter(prorder => prorder.destination===support.origin && prorder.order==='move');
+                if(samedestin.length===0){
+                    supportorders.push(support)
+                }else{
+                    [orders,result,retired]=this.solveCombat(orders,support,samedestin,'origin')
+                    retired.push(retir);
+                    result ==='win' && supportorders.push(support)
+                }
             })
             supportorders.forEach(support=>{
-                const index = combat.findIndex(combatarmy=>combatarmy.origin===support.support);
-                combat[index].strength++;
+                combat.forEach(combatarmy=>{
+                    if(combatarmy.origin===support.support){
+                        combatarmy.strength = combatarmy.strength+1;
+                    }
+                });
             })
         }
         combat.sort(function (combat1,combat2) {
-            if (combat1.strength > combat2.strength) {
+            if (combat1.strength < combat2.strength) {
               return 1;
-            } else if (combat1.strength < combat2.strength) {
+            } else if (combat1.strength > combat2.strength) {
               return -1;
             } 
             return 0;
         });
-        if(combat[0].strenght>combat[1].strenght){
-            combat[0].id === order.id && (result='win');
-            combat[0].order === 'move' && this.solveOrder(combat[0]);
+        if(combat[0].strength>combat[1].strength){
+            if(combat[0].id === order.id){
+                result='win'
+            }
+            if(combat[0].order === 'move'){
+                this.solveOrder(combat[0]);
+            }
             for(let i = 1; i<combat.length; i++ ){
                 combat[i].origin === combat[0].destination && combat[0].order === 'move' && retired.push({...combat[i], attack:combat[0].origin})
             }
@@ -113,31 +143,42 @@ class Diplomacy extends Component {
             combat.push({...element, strength: 1})
         })
         const presupportorders = orders.filter(prorder=>prorder.destination===order[key]&&prorder.order==='support')
-        if(presupportorders>0){
+        if(presupportorders.length>0){
             const supportorders = []
             presupportorders.forEach(support => {
                 let result = '';
                 const samedestin = orders.filter(prorder => prorder.destination===support.origin && prorder.order==='move');
-                samedestin.length===0?supportorders.push(support):[orders,result,retired]=this.solveCombat(orders,support,samedestin,'origin')
-                retired.push(retir);
-                result ==='win' && supportorders.push(support)
+                if(samedestin.length===0){
+                    supportorders.push(support)
+                }else{
+                    [orders,result,retired]=this.solveCombat(orders,support,samedestin,'origin')
+                    retired.push(retir);
+                    result ==='win' && supportorders.push(support)
+                }
             })
             supportorders.forEach(support=>{
-                const index = combat.findIndex(combatarmy=>combatarmy.origin===support.support);
-                combat[index].strength++;
+                combat.forEach(combatarmy=>{
+                    if(combatarmy.origin===support.support){
+                        combatarmy.strength = combatarmy.strength+1;
+                    }
+                });
             })
         }
         combat.sort(function (combat1,combat2) {
-            if (combat1.strength > combat2.strength) {
+            if (combat1.strength < combat2.strength) {
               return 1;
-            } else if (combat1.strength < combat2.strength) {
+            } else if (combat1.strength > combat2.strength) {
               return -1;
             } 
             return 0;
         });
-        if(combat[0].strenght>combat[1].strenght){
-            combat[0].id === order.id && (result='win');
-            combat[0].order === 'move' && this.solveOrder(combat[0]);
+        if(combat[0].strength>combat[1].strength){
+            if(combat[0].id === order.id){
+                result='win'
+            }
+            if(combat[0].order === 'move'){
+                this.solveOrder(combat[0]);
+            }
             for(let i = 1; i<combat.length; i++ ){
                 combat[i].origin === combat[0].destination && combat[0].order === 'move' && retired.push({...combat[i], attack:combat[0].origin})
             }
@@ -150,9 +191,14 @@ class Diplomacy extends Component {
         let retir=[]
         const emptydestination = orders.findIndex(prOrder => prOrder.origin === order.destination)
         if(emptydestination === -1){
-            const samedestination = orders.filter(prorder => prorder.destination===order.destination);
-            samedestination.length===0?this.solveOrder(order)&&(solved='win'):[orders,solved,retir] = this.solveCombat(orders, order, samedestination);
-            retired.push(...retir);
+            const samedestination = orders.filter(prorder => prorder.destination===order.destination && prorder.order==='move');
+            if(samedestination.length===0){
+                this.solveOrder(order);
+                (solved='win')
+            }else{
+                [orders,solved,retir] = this.solveCombat(orders, order, samedestination);
+                retired.push(...retir);
+            }
         }else{
             const destinationOrder = orders[emptydestination]
             if(destinationOrder.order==='move'){
@@ -163,9 +209,21 @@ class Diplomacy extends Component {
                     let [destinOrder] = orders.splice(emptydestination,1);
                     [orders, solved, retir]=this.solveMovement(orders,destinationOrder)
                     retired.push(...retir);
-                    solved==='win' && this.solveOrder(order);
-                    solved!=='win' && orders.push(destinOrder) && ([orders,solved,retir] = this.solveCombat(orders, order, [destinationOrder]));
-                    retired.push(...retir);
+                    if(solved==='win'){
+                        const samedestination = orders.filter(prorder => prorder.destination===order.destination && prorder.order==='move');
+                        if(samedestination.length===0){
+                            this.solveOrder(order);
+                            (solved='win')
+                        }else{
+                            [orders,solved,retir] = this.solveCombat(orders, order, samedestination);
+                            retired.push(...retir);
+                        }
+                    }else{
+                        const samedestination = orders.filter(prorder => prorder.destination===order.destination && prorder.order==='move');
+                        orders.push(destinOrder);
+                        [orders,solved,retir] = this.solveCombat(orders, order, [destinationOrder, ...samedestination]);
+                        retired.push(...retir);
+                    }
                 }
             }else{
                 [orders,solved,retir] = this.solveCombat(orders, order, [destinationOrder]);
@@ -188,6 +246,8 @@ class Diplomacy extends Component {
             retired.push(...retir);
             moveIndex = orders.findIndex(order=> order.order === 'move');
         }
+        
+        
         if(retired>0){
             prturn.phase=2;
             prturn.userturn.forEach(userturn=>{
@@ -202,7 +262,7 @@ class Diplomacy extends Component {
             const result = await DBService.setDocumentWithId('diplomacy', game, game.id);
             result && this.setState({game,turn,loading:false});
         }else{
-            if(prturn.seasson==='autumn'){
+            if(prturn.season==='autumn'){
                 prturn.phase=3;
                 const result = await DBService.setDocumentWithId('diplomacy', game, game.id);
                 result && this.setState({game,turn,loading:false});

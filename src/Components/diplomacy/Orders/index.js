@@ -53,12 +53,11 @@ class Orders extends Component {
     setTerritory = (event) =>{
         this.setOrders(event.name.slice(0,-2),event.value,'destination')
     }
-    setSupport = (event,situation) =>{
-        this.setOrders(event.name.slice(0,-2),situation,'destination')
+    setSupport = (event) =>{
         this.setOrders(event.name.slice(0,-2),event.value,'support')
     }
     setOrigin = (event) =>{
-        this.setOrders(event.name.slice(0,-2),event.value,'origin')
+        this.setOrders(event.name.slice(0,-2),event.value,'from')
     }
     setTransport = (event) =>{
         this.setOrders(event.name.slice(0,-2),event.value,'to')
@@ -105,7 +104,7 @@ class Orders extends Component {
                 case 'support':
                     return (<React.Fragment>
                             to: 
-                            <select name={army.id+'sp'} id={army.id+'sp'} value={order.support} onChange={(event)=>this.setSupport(event.target,army.territory)}>
+                            <select name={army.id+'sp'} id={army.id+'sp'} value={order.destination} onChange={(event)=>this.setTerritory(event.target)}>
                                 <option value="">Not Defined</option>
                                 {datamap[army.territory].neighbors
                                     .filter(neigh=>datamap[neigh].coast || (army.type==="fleet" &&  datamap[neigh].kind==='sea')|| (army.type==="army" &&  datamap[neigh].kind==='land'))
@@ -113,9 +112,9 @@ class Orders extends Component {
                             </select>
                             from: 
                             {
-                                order.support?<select name={army.id+'or'} id={army.id+'or'} value={order.origin} onChange={(event)=>this.setOrigin(event.target)}>
+                                order.destination?<select name={army.id+'fr'} id={army.id+'fr'} value={order.support} onChange={(event)=>this.setSupport(event.target)}>
                                     <option value="">Not Defined</option>
-                                    {datamap[order.support].neighbors
+                                    {datamap[order.destination].neighbors
                                         .filter(neigh=>territoryWithArmies.includes(neigh))
                                         .map(neigh => <option key={neigh} value={neigh}>{deployedArmies[neigh].country!==army.country?this.capitalize(deployedArmies[neigh].country)+' - ':''}{datamap[neigh].name}
                                         </option>)}

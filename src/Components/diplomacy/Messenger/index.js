@@ -17,10 +17,11 @@ class Messenger extends Component {
             online: false,
             playersStatus:{}
         }
+        this.conexion = null;
     }
     async componentDidMount(){
         const {idgame, players} = this.props
-        DBService.getRealtimeDocument('messages','diplomacy_id', idgame ,(messages) => {
+        this.conexion = await DBService.getRealtimeDocument('messages','diplomacy_id', idgame ,(messages) => {
             messages!==null && this.setState({messages});
         });
         players.forEach(player => AuthService.userStatusObserver(player.id,(status)=>{
@@ -55,7 +56,9 @@ class Messenger extends Component {
         const success = DBService.setDocumentWithId('messages', messages, idgame);
         success && this.setState({message:''});
     }
-
+    componentWillUnmount(){
+        this.conexion();
+    }
     render() {
         const { messages, message, to, filter, online, playersStatus} = this.state;
         const {players,from} = this.props;

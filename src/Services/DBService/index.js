@@ -47,7 +47,7 @@ export default class DBService{
         return success;
     }
     static async getRealtimeDocument(collectionName, filterName, filterValue, callback, comparator='=='){
-        return await DB.collection(collectionName).where(filterName, comparator, filterValue)
+        return DB.collection(collectionName).where(filterName, comparator, filterValue)
           .onSnapshot((querySnapshot) => {
             let result = null;
             querySnapshot.forEach((doc) => {
@@ -55,6 +55,16 @@ export default class DBService{
               result.id = doc.id;
             });
             callback(result);
+        });
+    }
+    static async getRealtimeContent(collectionName, callback){
+        return DB.collection(collectionName).onSnapshot((querySnapshot) => {
+            let content = []
+            querySnapshot.forEach((doc) => {
+                const data = doc.data()
+                content.push( { id: doc.id, ...data } );
+            });
+            callback(content);
         });
     }
     static async getDocumentById(collection, id){
@@ -83,16 +93,6 @@ export default class DBService{
         });
 
         return result;
-    }
-    static async getRealtimeContent(collectionName, callback){
-        return DB.collection(collectionName).onSnapshot((querySnapshot) => {
-            let content = []
-            querySnapshot.forEach((doc) => {
-                const data = doc.data()
-                content.push( { id: doc.id, ...data } );
-            });
-            callback(content);
-        });
     }
     static async getContent(collection){
         let content=[];
