@@ -17,7 +17,7 @@ export default {
         kind: 'sea',
         coast: false,
         sc: false,
-        neighbors: ['NWG','Edi','Yor','Lon','Bel','Hol','HEL','Den','SKA','Nwy']
+        neighbors: ['NWG','Edi','Yor','Lon','Bel','Hol','HEL','Den','SKA','Nwy', 'ENG']
     },
     ADR:{
         name: 'Adriatic Sea',

@@ -3,11 +3,14 @@ import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 
 import DBService from '../../Services/DBService';
+import datamap from './../../../data/map';
+
 import Login from '../auth/Login';
 import Map from './Map';
 import Messenger from './Messenger';
 import Orders from './Orders';
 import Loading from '../Loading';
+import Retreats from './Retreats';
 
 
 class Diplomacy extends Component {
@@ -39,14 +42,30 @@ class Diplomacy extends Component {
         const result = await DBService.setDocumentWithId('diplomacy', game, game.id);
         result && this.setState({game,turn,loading:false});
     }
-    solveOrder = (order) =>{
+    isTransport=(order)=>{
+        let result=true;
         const {game, turn} = this.state
         const prturn = game.turns[turn]
-        const indexuserturn = prturn.userturn.findIndex(userturn => userturn.country === order.country);
-        const indexarmy = prturn.userturn[indexuserturn].armies.findIndex(army => army.id === order.id);
-        prturn.userturn[indexuserturn].armies[indexarmy].territory = order.destination;
+        const transportorders = [];
+        prturn.turnuser.forEach(turnuser =>{
+            transportorders = turnuser.orders.filter(order => order.type="transport")
+        })
+        return result
     }
-    startCrossCombat(orders, order, crossorder){
+    solveOrder = (order) =>{
+        let correct = true
+        if(!datamap[order.origin].neighbors.includes(order.destination)){
+            correct = this.isTransport(order);
+        }
+        if(correct){
+            const {game, turn} = this.state
+            const prturn = game.turns[turn]
+            const indexuserturn = prturn.userturn.findIndex(userturn => userturn.country === order.country);
+            const indexarmy = prturn.userturn[indexuserturn].armies.findIndex(army => army.id === order.id);
+            prturn.userturn[indexuserturn].armies[indexarmy].territory = order.destination;
+        }
+    }
+    solveCrossCombat(orders, order, crossorder){
         let result='tie';
         let retired = []
         let retir=[]
@@ -57,7 +76,7 @@ class Diplomacy extends Component {
             presupportorders.forEach(support => {
                 let result = '';
                 const samedestin = orders.filter(prorder => prorder.destination===support.origin);
-                samedestin.length===0?supportorders.push(support):[orders,result,retir]=this.startCombat(orders,support,samedestin)
+                samedestin.length===0?supportorders.push(support):[orders,result,retir]=this.solveCombat(orders,support,samedestin)
                 retired.push(retir);
                 result ==='win' && supportorders.push(support)
             })
@@ -83,7 +102,7 @@ class Diplomacy extends Component {
         }
         return [orders,result,retired];
     }
-    startCombat(orders, order, samedestination, key='destination'){
+    solveCombat(orders, order, samedestination, key='destination'){
         let result='tie'
         let retired = []
         let retir=[]
@@ -99,7 +118,7 @@ class Diplomacy extends Component {
             presupportorders.forEach(support => {
                 let result = '';
                 const samedestin = orders.filter(prorder => prorder.destination===support.origin && prorder.order==='move');
-                samedestin.length===0?supportorders.push(support):[orders,result,retired]=this.startCombat(orders,support,samedestin,'origin')
+                samedestin.length===0?supportorders.push(support):[orders,result,retired]=this.solveCombat(orders,support,samedestin,'origin')
                 retired.push(retir);
                 result ==='win' && supportorders.push(support)
             })
@@ -132,24 +151,24 @@ class Diplomacy extends Component {
         const emptydestination = orders.findIndex(prOrder => prOrder.origin === order.destination)
         if(emptydestination === -1){
             const samedestination = orders.filter(prorder => prorder.destination===order.destination);
-            samedestination.length===0?this.solveOrder(order)&&(solved='win'):[orders,solved,retir] = this.startCombat(orders, order, samedestination);
+            samedestination.length===0?this.solveOrder(order)&&(solved='win'):[orders,solved,retir] = this.solveCombat(orders, order, samedestination);
             retired.push(...retir);
         }else{
             const destinationOrder = orders[emptydestination]
             if(destinationOrder.order==='move'){
                 if(destinationOrder.destination===order.origin){
-                    [orders,solved,retir] = this.startCrossCombat(orders, order, destinationOrder);
+                    [orders,solved,retir] = this.solveCrossCombat(orders, order, destinationOrder);
                     retired.push(...retir);
                 }else{
                     let [destinOrder] = orders.splice(emptydestination,1);
                     [orders, solved, retir]=this.solveMovement(orders,destinationOrder)
                     retired.push(...retir);
                     solved==='win' && this.solveOrder(order);
-                    solved!=='win' && orders.push(destinOrder) && ([orders,solved,retir] = this.startCombat(orders, order, [destinationOrder]));
+                    solved!=='win' && orders.push(destinOrder) && ([orders,solved,retir] = this.solveCombat(orders, order, [destinationOrder]));
                     retired.push(...retir);
                 }
             }else{
-                [orders,solved,retir] = this.startCombat(orders, order, [destinationOrder]);
+                [orders,solved,retir] = this.solveCombat(orders, order, [destinationOrder]);
                 retired.push(...retir);
             }
         }
@@ -171,6 +190,15 @@ class Diplomacy extends Component {
         }
         if(retired>0){
             prturn.phase=2;
+            prturn.userturn.forEach(userturn=>{
+                const retiredorders = retired.filter(retir => userturn.armies.findIndex(army => retir.id===army.id )!==-1)
+                if(retiredorders.length>1){
+                    userturn.retiredorders = retiredorders;
+                    userturn.completeRetired = false;
+                }else{
+                    userturn.completeRetired = true;
+                }
+            })
             const result = await DBService.setDocumentWithId('diplomacy', game, game.id);
             result && this.setState({game,turn,loading:false});
         }else{
@@ -216,6 +244,7 @@ class Diplomacy extends Component {
         if(loading){
             return <Loading />
         }
+        console.log(game)
         const prturn = game.turns[turn];
         return (
             <div className="GameBoard">
@@ -224,7 +253,7 @@ class Diplomacy extends Component {
                     <Map turn={prturn} player={user.id} saveOrders={this.saveOrders}/>
                     <div className="Complements">
                         {prturn.phase===1 && <Orders turn={prturn} player={user.id} saveOrders={this.saveOrders} processTurn={this.processTurn}/>}
-                        {prturn.phase===2 && 'retreats'}
+                        {prturn.phase===2 && <Retreats turn={prturn} player={user.id} saveRetreats={this.saveRetreats} />}
                         {prturn.phase===3 && 'Create Units'}
                         {prturn.phase===4 && 'Finished Turn'}
                         <Messenger players={game.players} idgame={game.id} from={user.id}/>

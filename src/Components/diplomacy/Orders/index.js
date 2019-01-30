@@ -60,22 +60,43 @@ class Orders extends Component {
     setOrigin = (event) =>{
         this.setOrders(event.name.slice(0,-2),event.value,'origin')
     }
+    setTransport = (event) =>{
+        this.setOrders(event.name.slice(0,-2),event.value,'to')
+    }
+    territoriesToTransport(territoryWithArmies,army){
+        let nextround = true;
+        const startingterritory=army.territory;
+        const territoriesWithFleets = [...datamap[startingterritory].neighbors.filter(neigh=>datamap[neigh].kind==="sea"&&territoryWithArmies.includes(neigh))]
+        while(nextround){
+            const prevlength = territoriesWithFleets.length;
+            territoriesWithFleets.forEach(element => {
+                territoriesWithFleets.push(...datamap[element].neighbors.filter(neigh=>!territoriesWithFleets.includes(neigh)&&datamap[neigh].kind==="sea"&&territoryWithArmies.includes(neigh)))
+            })
+            nextround = prevlength !== territoriesWithFleets.length;
+        }
+        const result = [];
+        result.push(...datamap[startingterritory].neighbors.filter(neigh=>datamap[neigh].coast))
+        territoriesWithFleets.forEach(terr => result.push(...datamap[terr].neighbors.filter(neigh=>datamap[neigh].coast)))
+        return result
+    }
     getSelectedOptions = (order,army) =>{
         const {turn} = this.props
         const deployedArmies = {};
         turn.userturn.forEach(usturn => usturn.armies.forEach(prarmy => {
             if(prarmy.id!==army.id){
-                deployedArmies[prarmy.territory]=prarmy.country;
+                deployedArmies[prarmy.territory]={country: prarmy.country, type: prarmy.type};
             }
         }))
         const territoryWithArmies = Object.keys(deployedArmies);
+        const territoriesToTransport = this.territoriesToTransport(territoryWithArmies,army)
         if(order){
             switch(order.order){
                 case 'move':
+                    const destination = army.type==="army"? [...new Set([...datamap[army.territory].neighbors,...territoriesToTransport])]:datamap[army.territory].neighbors
                     return (<React.Fragment>
                                 to: <select name={army.id+'mv'} id={army.id+'mv'} value={order.destination} onChange={(event)=>this.setTerritory(event.target)}>
                                     <option value="">Not Defined</option>
-                                    {datamap[army.territory].neighbors
+                                    {destination
                                         .filter(neigh=>datamap[neigh].coast || (army.type==="fleet" &&  datamap[neigh].kind==='sea')|| (army.type==="army" &&  datamap[neigh].kind==='land'))
                                         .map(neigh => <option key={neigh} value={neigh}>{datamap[neigh].name}</option>)}
                                 </select>
@@ -84,7 +105,7 @@ class Orders extends Component {
                 case 'support':
                     return (<React.Fragment>
                             to: 
-                            <select name={army.id+'sp'} id={army.id+'sp'} value={order.suport} onChange={(event)=>this.setSuport(event.target,army.territory)}>
+                            <select name={army.id+'sp'} id={army.id+'sp'} value={order.support} onChange={(event)=>this.setSupport(event.target,army.territory)}>
                                 <option value="">Not Defined</option>
                                 {datamap[army.territory].neighbors
                                     .filter(neigh=>datamap[neigh].coast || (army.type==="fleet" &&  datamap[neigh].kind==='sea')|| (army.type==="army" &&  datamap[neigh].kind==='land'))
@@ -92,19 +113,38 @@ class Orders extends Component {
                             </select>
                             from: 
                             {
-                                order.suport?<select name={army.id+'or'} id={army.id+'or'} value={order.origin} onChange={(event)=>this.setOrigin(event.target)}>
+                                order.support?<select name={army.id+'or'} id={army.id+'or'} value={order.origin} onChange={(event)=>this.setOrigin(event.target)}>
                                     <option value="">Not Defined</option>
-                                    {datamap[order.suport].neighbors
+                                    {datamap[order.support].neighbors
                                         .filter(neigh=>territoryWithArmies.includes(neigh))
-                                        .map(neigh => <option key={neigh} value={neigh}>{deployedArmies[neigh]!==army.country?deployedArmies[neigh]+' - ':''}{datamap[neigh].name}
+                                        .map(neigh => <option key={neigh} value={neigh}>{deployedArmies[neigh].country!==army.country?this.capitalize(deployedArmies[neigh].country)+' - ':''}{datamap[neigh].name}
                                         </option>)}
-                                </select>:'Select Suport Destination'
+                                </select>:'Select Support Destination'
 
                             }
                         </React.Fragment> 
                     )
                 case 'transport':
-                    return ' doing transport'
+                    const destinationtransport = [...new Set([...datamap[army.territory].neighbors,...territoriesToTransport])];
+                    
+                    return (<React.Fragment>
+                        from: <select name={army.id+'tp'} id={army.id+'tp'} value={order.destination} onChange={(event)=>this.setTerritory(event.target)}>
+                            <option value="">Not Defined</option>
+                            {destinationtransport
+                                .filter(neigh=> territoryWithArmies.includes(neigh) && deployedArmies[neigh].type==='army')
+                                .map(neigh => <option key={neigh} value={neigh}>{deployedArmies[neigh].country!==army.country?this.capitalize(deployedArmies[neigh].country)+' - ':''}{datamap[neigh].name}</option>)}
+                        </select>
+                        to: 
+                        {
+                            order.destination?<select name={army.id+'to'} id={army.id+'to'} value={order.to} onChange={(event)=>this.setTransport(event.target)}>
+                                <option value="">Not Defined</option>
+                                {destinationtransport
+                                    .filter(neigh=>datamap[neigh].coast)
+                                    .map(neigh => <option key={neigh} value={neigh}>{datamap[neigh].name}</option>)}
+                            </select>:'Select Transport Origin'
+                        }
+               </React.Fragment> 
+            )
                 default:
                         return <React.Fragment> in {datamap[army.territory].name}</React.Fragment>
             }
@@ -137,7 +177,7 @@ class Orders extends Component {
                                     <option value="hold">Hold</option>
                                     <option value="move">Move</option>
                                     <option value="support">Support</option>
-                                    {army.type==='fleet' && datamap[army.territory].kind==='sea' && <option value="transport">transport</option>}
+                                    {army.type==='fleet' && datamap[army.territory].kind==='sea' && <option value="transport">Transport</option>}
                                 </select>
                                 {this.getSelectedOptions(order,army)}
                             </div>)
