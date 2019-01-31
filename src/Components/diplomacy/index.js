@@ -11,6 +11,7 @@ import Messenger from './Messenger';
 import Orders from './Orders';
 import Loading from '../Loading';
 import Retreats from './Retreats';
+import UnitStatus from './UnitStatus';
 
 
 class Diplomacy extends Component {
@@ -264,6 +265,21 @@ class Diplomacy extends Component {
         }else{
             if(prturn.season==='autumn'){
                 prturn.phase=3;
+                let armies = []
+                prturn.userturn.forEach(userturn=> userturn.armies.forEach(army => armies.push(army)))
+                armies.forEach(army => {
+                    prturn.userturn.forEach(userturn =>{
+                        const index = userturn.territories.indexOf(army.territory);
+                        index===-1 && userturn.country===army.country && datamap[army.territory].kind!=='sea' &&userturn.territories.push(army.territory)
+                        index!==-1 && userturn.country!==army.country && userturn.territories.splice(index,1)
+                    })
+                })
+                prturn.userturn.forEach(userturn => {
+                    let sc = 0;
+                    userturn.territories.forEach(territory => datamap[territory].sc && sc++)
+                    userturn.controlledSC=sc;
+                    userturn.finishedUnitStatus = sc === 0?true:false;
+                })
                 const result = await DBService.setDocumentWithId('diplomacy', game, game.id);
                 result && this.setState({game,turn,loading:false});
             }else{
@@ -272,6 +288,34 @@ class Diplomacy extends Component {
                 result && this.setState({game,turn,loading:false},this.newTurn);
             }
         }
+    }
+    saveRetreats = async(retreats) =>{
+        const {game, turn} = this.state;
+        this.setState({loading: true})
+        const {user} = this.props
+        const index = game.turns[turn].userturn.findIndex(userturn => userturn.player===user.id)
+        game.turns[turn].userturn[index].retreats = retreats
+        game.turns[turn].userturn[index].finishedRetreats = true;
+        const result = await DBService.setDocumentWithId('diplomacy', game, game.id);
+        result && this.setState({game,turn,loading:false});
+    }
+    processRetreats = () =>{
+        console.log('Processing Retreats')
+    }
+    saveUnitStatus = async(unitstatus) =>{
+        const {game, turn} = this.state;
+        this.setState({loading: true})
+        const {user} = this.props
+        const index = game.turns[turn].userturn.findIndex(userturn => userturn.player===user.id)
+        game.turns[turn].userturn[index].unitstatus = unitstatus
+        game.turns[turn].userturn[index].finishedUnitStatus = true;
+        const result = await DBService.setDocumentWithId('diplomacy', game, game.id);
+        result && this.setState({game,turn,loading:false});
+    }
+    processStatus = async() =>{
+        const {game, turn} = this.state
+        const prturn = game.turns[turn]
+        console.log(prturn)
     }
     newTurn = async() =>{
         this.setState({loading: true});
@@ -295,6 +339,9 @@ class Diplomacy extends Component {
         const result = await DBService.setDocumentWithId('diplomacy', game, game.id);
         result && this.setState({game,turn:game.turns.length-1,loading:false});
     }
+    goToTurn = (turn) =>{
+        this.setState({turn});
+    }
     render() {
         const {user} = this.props
         const {turn, game, loading} = this.state;
@@ -304,18 +351,26 @@ class Diplomacy extends Component {
         if(loading){
             return <Loading />
         }
-        console.log(game)
+        //console.log(game)
         const prturn = game.turns[turn];
+        //console.log(prturn);
         return (
             <div className="GameBoard">
+                <div className="GameHeader">
                 <h1>{game.name}</h1>
+                <div className="Turnnav">
+                    {turn!==0 && <button onClick={()=>this.goToTurn(turn-1)}>Previous</button>}
+                    {`${turn+1}/${game.turns.length}`}
+                    {turn!==game.turns.length-1 && <button onClick={()=>this.goToTurn(turn+1)}>Next</button>}
+                </div>
+                </div>
                 <div className="Board">
                     <Map turn={prturn} player={user.id} saveOrders={this.saveOrders}/>
                     <div className="Complements">
                         {prturn.phase===1 && <Orders turn={prturn} player={user.id} saveOrders={this.saveOrders} processTurn={this.processTurn}/>}
-                        {prturn.phase===2 && <Retreats turn={prturn} player={user.id} saveRetreats={this.saveRetreats} />}
-                        {prturn.phase===3 && 'Create Units'}
-                        {prturn.phase===4 && 'Finished Turn'}
+                        {prturn.phase===2 && <Retreats turn={prturn} player={user.id} saveRetreats={this.saveRetreats} processRetreats={this.processRetreats}/>}
+                        {prturn.phase===3 && <UnitStatus turn={prturn} player={user.id} saveUnitStatus={this.saveUnitStatus} processStatus={this.processStatus} />}
+                        {prturn.phase===4 && <div className="Orders"><h1>Finished Turn</h1></div>}
                         <Messenger players={game.players} idgame={game.id} from={user.id}/>
                     </div>
                 </div>

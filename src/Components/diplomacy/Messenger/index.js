@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import DBService from '../../../Services/DBService';
 import AuthService from '../../../Services/AuthService';
+import countries from '../../../data/country';
 
 class Messenger extends Component {
     constructor(props){
@@ -59,6 +60,7 @@ class Messenger extends Component {
     componentWillUnmount(){
         this.conexion();
     }
+    capitalize = (string) => string.charAt(0).toUpperCase() + string.slice(1)
     render() {
         const { messages, message, to, filter, online, playersStatus} = this.state;
         const {players,from} = this.props;
@@ -67,7 +69,14 @@ class Messenger extends Component {
                 <h3>Messages</h3>{online&&<p>user online</p>}
                 <div className="HeaderMessage">
                 <button onClick={()=>this.setFilter(0)} className={filter===0?'activeTab':''}>All Players</button>
-                    {players.filter(player=>player.id!==from).map(player=><button onClick={()=>this.setFilter(player.id)} key={player.id} className={filter===player.id?'activeTab':''}><i className={`fas fa-circle ${playersStatus[player.id]?playersStatus[player.id]:'offline'}`}></i> {player.name}</button>)}
+                    {
+                        players.filter(player=>player.id!==from)
+                        .map(player=><button onClick={()=>this.setFilter(player.id)} key={player.id} className={filter===player.id?'activeTab':''}>
+                                <i className={`fas fa-circle ${playersStatus[player.id]?playersStatus[player.id]:'offline'}`}></i> 
+                                {player.name} 
+                                <br/>
+                                <i className={`fas fa-circle`} style={{color:countries[player.country].armycol}}></i>{this.capitalize(player.country)}
+                            </button>)}
                 </div>
                 <div className="MessageView">
                     {messages.chat.length>0 ?

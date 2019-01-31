@@ -44,7 +44,7 @@ class StartGame extends Component {
             return;
         }
         this.setState({errormess:''});
-        const turns = [{id: idgame+1, year: 1901, season: 'spring', userturn:[]}]
+        const turns = [{id: idgame+1, year: 1901, season: 'spring', phase:1, userturn:[]}]
         const [austria] = players.filter(player => player.country === 'austria')
         turns[0].userturn.push({
             country:'austria',

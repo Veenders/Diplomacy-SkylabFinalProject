@@ -47,6 +47,20 @@ class Map extends Component {
         })
         return territories;
     }
+    drawLines=()=>{
+        let lines = []
+        let linesresult =[];
+        const {turn, player} = this.props;
+        if(turn.phase===1){
+            lines = turn.userturn.filter(usturn=>usturn.player===player).orders.map(order=> order)
+        }else{
+            turn.userturn.forEach(usturn=>usturn.orders.forEach(order=>lines.push(order)))
+        }
+        if(lines.length>0){
+            linesresult = lines.map(line => <svg key={line.id}><line  x1={datamap[line.origin].x} y1={datamap[line.origin].y} x2={datamap[line.destination?line.destination:line.origin].x} y2={datamap[line.destination?line.destination:line.origin].x} style={{stroke:'red',strokeWidth:2,zIndex:10}} /></svg>)
+        }
+        return linesresult;
+    }
     TerritoryClicked = (event) =>{
         console.log(event.target.id);
     }
