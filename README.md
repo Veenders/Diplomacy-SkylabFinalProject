@@ -16,23 +16,165 @@ English Wikipedia entry about [Diplomacy Game](https://en.wikipedia.org/wiki/Dip
 
 ### This Project
 
-Llevo jugando a juegos de mesa y a rol des de que tenia 14 años, por el contrario los juegos de ordenador nunca me han acabado de enganchar, supongo que el ser patos es lo que tiene, ahora en serio, la realidad es que la interacción social que se produce en un juego de mesa con todos tus amigos alrededor es difícil de simular en una pantalla de ordenador.
+I've been playing board games and role since I was 14 years old, otherwise, computer games have never quite hooked me, I guess that being ducks is what you have, now seriously, the reality is that social interaction What is produced in a board game with all your friends around is difficult to simulate on a computer screen.
 
-Con ciertos amigos, debido a la distància a que con el tiempo las obligaciones familiares eran cada vez más nombrosas y que por tanto era cada vez más difícil quedar empezamos a jugar a ciertos juegos a través de sistema por correo electrónico [(Cyberboard)](https://cyberboard.brainiac.com/) era una forma divertida de mantener el contacto y combinado con el whatsapp y los sistemas de mensajeria hacía que fuese divertido tener contacto y volver a jugar.
+With certain friends, due to the distance to which, over time, family obligations were becoming more and more important and therefore it was becoming increasingly difficult to start playing certain games through an email system [(Cyberboard)](https://cyberboard.brainiac.com/) was a fun way to keep in touch and combined with whatsApp and messaging systems made it fun to have contact and play again.
 
-En este sistema teniamos juegos como el Necromancer, el Diplomacy o el Game of Thrones, los cuales combinan con estos sistemas de Juego por Correo ya que no hay casi nada de aleatoriedad en su funcionamiento.
+In this game system we had games like Necromancer, Diplomacy or the Game of Thrones, which combine perfectly in Play by Mail because there is almost nothing of randomness in its operation.
 
-Es por ello que cuando en el curso de desarrollo FrontEnd de Skylab tubimos que escoger un proyecto, crei que la opción que más me gustaria seria poder desarrollar un sistema para poder jugar con los amigos a estos juegos.
+That's why when in the course of Skylab FrontEnd development we had to choose a project, I thought that the option I would most like would be to develop a system to play with friends to these games.
 
-Inicialmente la elección fue el juego de Tronos, ya que ya había hecho un desarrollo previo y me sentia familiarizado, però en la reunión de orientación del proyecto vimos que al final tenía muchos pequeños componentes que serian repetitivos desarrollar, por lo que no aportavan valor, a la vez que iban a restar tiempo al proyecto. Es por ello que ahí decidimos cambiar al Diplomacy, un juego más simple en el funcionamiento, aunque más complejo en la algoritmica de juego (lástima que me di cuenta a mitad de proyecto)
+Initially the choice was the game of Thrones, since I had already done a previous development and I was familiar, but in the orientation meeting of the project we saw that in the end it had many small components that would be repetitive to develop, so they did not add value, at the same time that they were going to subtract time from the project. That is why we decided to change to Diplomacy, a simpler game in operation, although more complex in the game algorithm (too bad I realized halfway through the project)
 
-## Descripción Funcional
+## Functional Description
 
-Cuando el usuario entra en la pàgina se le ofrecen las opciones de buscar una partida o crear una nueva pensando en minimizar la navegación del usuario que ya sabe de que va y viene a jugar. Para el que no esta acostumbrado se le ofrece el menú en la parte derecha con la opción de visitar el Blog, Ver las Reglas o los Juegos en marcha. También en el menú tiene la opción de entrar en la aplicación.
+When the user enters the page, they are offered the options of searching for a game or creating a new one with the intention of minimizing the navigation of the user who already knows what is coming and going to play. For those who are not used to it, the menu is offered on the right side with the option to visit the Blog, See the Rules or the Games in progress. Also in the menu you have the option to enter the application.
 
-Si accede a las partidas puede ver la información bàsica de las mismas, però si quiere entrar en una partida o crear una el sistema le muestra la pantalla de login, Desde dónde puede registrar-se en caso de no tener cuenta.
+If you access the games you can see the basic information of them, but if you want to enter a game or create a system, the login screen is displayed, from where you can register if you do not have an account.
 
-Una vez realizado el login me aparecen las partidas que yo he creado o que estoy apuntando junto con las partidas abiertas. allí puedo apuntar-me a cualquier partida, poniendo el codigo de ingreso si el usuario que la creo así lo definió i puedo acceder a las partidas que estoy jugando.
+Once the login is done, I see the items that I have created or that I am writing together with the open items. there I can point to any game, by entering the entry code if the user who created it defined it and i can access the games I am playing.
 
-#### Diagrama Funcional
+#### Functional Diagram
 ![Diagrama Funcional](https://github.com/Veenders/Veenders-React/blob/develop/Documentation/Functional_Diagram.png?raw=true)
+
+## Tecnical Description
+Atomic Diplomacy is the Final project of Skylab's FrontEnd course and the Front have an special weight in the project.
+
+All the project is created on ReactJs, using firebase for backend service and Redux to have a Global Scope.
+
+All the project use Javascript and JSX.
+
+The design is implemente with SCSS rendered to CSS with node-sass.
+
+### Project Structure
+
+When you can search elements, the src Directory Description
+
+* Components: All the Components and structure
+    * App: The entry point of the App, Redux and User Entry.
+    * Auth: Login, Register and ResetPwd.
+        * Login Component.
+        * Register Component.
+        * ResetPwd Component. Not implemented.
+    * diplomacy: Control when you are playing the game.
+        * HeadGame: The Header when you play.
+        * Map: Draw the map and Starting Drag Feature.
+        * Messenger: Online Messenger Component.
+        * Orders: to Set the armies Orders.
+        * Retreats: to Set the Retreats Orders.
+        * UnitStatus: Create and Destroy Units at finishing Autumn
+    * GameForm: Create and Edit Form.
+    * gamesList: List of Game Items.
+        * GameItem: The card to see the Game Info.
+    * Header: The Main Menu
+    * Loading: Loading Animation.
+    * Modal Comportament: The Modal Component to see information.
+    * postLists: The list of Blog and rules items.
+        * postItem: Every Post and Rules Element.
+    * StartGame: The magic button to create the game.
+    * Veenders: Future's misteries.
+    * VerifyCode: The Component to verify if the Code to enroll is correct or not.
+* data: JSONs with necessary data to manage the elements
+    * country.js:Color's, and initial settings of every country
+    * map.js: The information of all the elements in the map.
+* img: All the fixed images of the project.
+* Redux: Redux Actions and Reducers.
+* Services: The connection layer with firebase.
+    * AuthService: User Login, Register, Logout and online presence.
+    * DBService: Connection with the firebase Database
+    * FileService: Upload Profile Images.
+* Views: All the views on the aplication.
+    * Component404: What happens when the page doesn't exist
+    * Game: The Basic Structure of Game Detail and Playing Game.
+    * Games: The List of Games.
+    * Main: The Landing Page.
+    * NewGame: The view to Create and Edit Games.
+    * NotAuthorized: The view when you want to acces when you can't.
+    * Posts: The Blog and Rules view.
+    * UserView: The Profile View.
+
+## Data model structure.
+
+
+Taking advantage of the fact that firebase works with non-relational formats, the data structure is similar to this "JSON":
+
+```json
+users :[{
+        uid: unique string,
+        email: string,
+        name: string,
+        lastname: string,
+        birthdate: date,
+        image: string,
+        rol: number
+    }]
+posts :[{
+        category: string(rules or blog),
+        title: string,
+        content: string,
+}]
+message :[{
+    id: unique string,
+    diplomacy_id: unique string,
+    chat: [{
+        from: users.uid Sender,
+        to: users.uid reciver or 0 to all,
+        message: string
+    }]
+}]
+diplomacy :[{
+    id: unique string,
+    name: string,
+    cooperative: boolean,
+    countryAssign: boolean,
+    open: boolean,
+    code: string,
+    numturn: number,
+    user: users.uid (Game Creator),
+    started: boolean,
+    players:[{
+        uid: users.uid,
+        name: users.name,
+        country: string
+    }]
+    turns: [{
+        id: diplmacy.id,
+        phase: number,
+        year: number,
+        season: string (spring or autumn)
+        userturn: [{
+            country: string,
+            finishedOrders: boolean,
+            finishedRetreats: boolean,
+            finishedUnitStatus: boolean,
+            player: users.uid
+            territories:[string]
+            armies: [{
+                country: string,
+                id: string (year of Creation+Territory of Creation),
+                territory: string,
+                type: string (army or fleet)
+            }]
+            orders: [{
+                id: army.id,
+                order: string (hold, move, support, transport),
+                origin: string,
+                destination: string,
+                support: string,
+                to: string,
+            }]
+            Retreats: [{
+                id: army.id,
+                origin: string,
+                destination: string(destroy to delete)
+            }]
+            UnitsStatus: [{
+                id: army.id,
+                country: string,
+                territory: string,
+                type: string,
+            }]
+        }]
+    }]
+}]
+```
