@@ -98,7 +98,7 @@ When you can search elements, the src Directory Description
 
 Taking advantage of the fact that firebase works with non-relational formats, the data structure is similar to this "JSON":
 
-```json
+```
 users :[{
         uid: unique string,
         email: string,
