@@ -12,6 +12,7 @@ import Orders from './Orders';
 import Loading from '../Loading';
 import Retreats from './Retreats';
 import UnitStatus from './UnitStatus';
+import HeadGame from './HeadGame';
 
 
 class Diplomacy extends Component {
@@ -307,15 +308,29 @@ class Diplomacy extends Component {
         this.setState({loading: true})
         const {user} = this.props
         const index = game.turns[turn].userturn.findIndex(userturn => userturn.player===user.id)
-        game.turns[turn].userturn[index].unitstatus = unitstatus
+        game.turns[turn].userturn[index].unitsStatus = unitstatus
         game.turns[turn].userturn[index].finishedUnitStatus = true;
         const result = await DBService.setDocumentWithId('diplomacy', game, game.id);
         result && this.setState({game,turn,loading:false});
     }
     processStatus = async() =>{
+        this.setState({loading: true})
         const {game, turn} = this.state
         const prturn = game.turns[turn]
-        console.log(prturn)
+        let unitsStatus = []
+        prturn.userturn.forEach(userturn=>userturn.unitsStatus.forEach(unitStatus => unitsStatus.push(unitStatus)))
+        unitsStatus.forEach(unit => {
+            const index = prturn.userturn.findIndex(turnuser => turnuser.country === unit.country)
+            if(unit.type === "destroy"){
+                const indexarmy = prturn.userturn[index].armies.findIndex(army => army.id === unit.id);
+                prturn.userturn[index].armies.splice(indexarmy,1)
+            }else{
+                prturn.userturn[index].armies.push(unit);
+            }
+        })
+        prturn.phase=4;
+        const result = await DBService.setDocumentWithId('diplomacy', game, game.id);
+        result && this.setState({game,turn,loading:false},this.newTurn);
     }
     newTurn = async() =>{
         this.setState({loading: true});
@@ -326,9 +341,10 @@ class Diplomacy extends Component {
         newturn.phase = 1;
         if(prturn.season==='autumn'){
             newturn.season = 'spring';
-            newturn.year=prturn+1;
+            newturn.year=parseInt(prturn.year)+1;
         }else{
             newturn.season = 'autumn'
+            newturn.year=prturn.year
         }
         newturn.userturn =[]; 
         prturn.userturn.forEach(pruserturn =>{
@@ -356,16 +372,9 @@ class Diplomacy extends Component {
         //console.log(prturn);
         return (
             <div className="GameBoard">
-                <div className="GameHeader">
-                <h1>{game.name}</h1>
-                <div className="Turnnav">
-                    {turn!==0 && <button onClick={()=>this.goToTurn(turn-1)}>Previous</button>}
-                    {`${turn+1}/${game.turns.length}`}
-                    {turn!==game.turns.length-1 && <button onClick={()=>this.goToTurn(turn+1)}>Next</button>}
-                </div>
-                </div>
+                <HeadGame game={game} turn={turn} goToTurn={this.goToTurn}/>
                 <div className="Board">
-                    <Map turn={prturn} player={user.id} saveOrders={this.saveOrders}/>
+                    <Map turn={prturn} player={user.id} saveOrders={this.saveOrders} />
                     <div className="Complements">
                         {prturn.phase===1 && <Orders turn={prturn} player={user.id} saveOrders={this.saveOrders} processTurn={this.processTurn}/>}
                         {prturn.phase===2 && <Retreats turn={prturn} player={user.id} saveRetreats={this.saveRetreats} processRetreats={this.processRetreats}/>}

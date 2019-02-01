@@ -33,8 +33,39 @@
     display: flex;
     flex-direction: column;
     justify-content: stretch;
-    align-items: center;
+    align-items: stretch;
     overflow: hidden;
+    .GameHeader{
+        display: flex;
+        flex-direction: column;
+        justify-content: stretch;
+        align-items: stretch;
+        padding-bottom: 1em;
+        .Turnnav{
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: flex-end;
+            button{
+                font-size: 1em;
+                background-color: rgba(0,0,0,0);
+                color: $primaryColor;
+                border: none;
+            }
+        }
+        #PlayersInfo{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: left;
+        }
+        @media(min-width:800px){
+            flex-direction: row;
+            justify-content: space-around;
+            align-items: center;
+        }
+    }
     .Board{
         display: flex;
         flex-direction: column;
@@ -109,6 +140,11 @@
                     color: $contrastColor;
                     flex-grow: 1;
                     padding: 0.5em 0;
+                    font-size: 0.6em;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
                     i{  
                         font-size:0.9em;
                         margin-right: 0.4em;
@@ -118,6 +154,11 @@
                     }
                     .offline{
                         color: #f08080;
+                    }
+                    @media(min-width:550px){
+                        font-size: 0.9em;
+                        display: inline;
+                        flex-direction: row;
                     }
                 }
                 .activeTab{
@@ -203,15 +244,30 @@
                 align-items: stretch;
                 .orderItem{
                     display: flex;
-                    flex-direction: row;
-                    justify-content: space-between;
-                    align-items: center;
+                    flex-direction: column;
+                    justify-content: stretch;
+                    align-items: stretch;
                     margin-top: 0.5em;
+                    border: 1px solid $primaryColor;
+                    border-radius: 10px;
+                    padding: 0.5em 0em;
                     select{
                         margin: 0 0.5em;
                         flex-grow: 1;
                         padding: 0.5em;
                         border-radius: 5px;
+                        outline: none;
+                    }
+                }
+                @media (min-width:550px){
+                    .orderItem{
+                        display: flex;
+                        flex-direction: row;
+                        justify-content: space-between;
+                        align-items: center;
+                        margin-top: 0.5em;
+                        border: none;
+                        padding: 0;
                     }
                 }
             }

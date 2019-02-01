@@ -34,7 +34,7 @@ class Map extends Component {
         let armys = []
         const {turn} = this.props;
         turn.userturn.map(usturn=>{
-            usturn.armies.map(army=>armys.push(<Armies father={this} key={army.id} id={army.id} color={countries[army.country].armycol} type={army.type} x={datamap[army.territory].x} y={datamap[army.territory].y} armyDroped={this.ArmyDroped}/> ))
+            usturn.armies.map(army=>armys.push(<Armies father={this} key={army.id+turn.year+turn.season} id={army.id} color={countries[army.country].armycol} type={army.type} x={datamap[army.territory].x} y={datamap[army.territory].y} armyDroped={this.ArmyDroped}/> ))
         })
         return armys;
     }

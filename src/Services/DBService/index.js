@@ -96,7 +96,6 @@ export default class DBService{
     }
     static async getContent(collection){
         let content=[];
-        console.log('entramos en servicio');
         try{
             const querySnapshot = await DB.collection(collection).get()
             querySnapshot.forEach((doc) => {
