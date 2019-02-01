@@ -35,4 +35,4 @@ Si accede a las partidas puede ver la información bàsica de las mismas, però 
 Una vez realizado el login me aparecen las partidas que yo he creado o que estoy apuntando junto con las partidas abiertas. allí puedo apuntar-me a cualquier partida, poniendo el codigo de ingreso si el usuario que la creo así lo definió i puedo acceder a las partidas que estoy jugando.
 
 #### Diagrama Funcional
-![Diagrama Funcional]()
+![Diagrama Funcional](https://github.com/Veenders/Veenders-React/blob/develop/Documentation/Functional_Diagram.png?raw=true)
